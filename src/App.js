@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import './App.css'; // Penting: Import file CSS
+import AIChecker from './AIChecker'; // <-- Tambahkan import untuk komponen AI
+import { collection, addDoc, serverTimestamp, getDocs } from "firebase/firestore";
+import { db } from "./firebase";
+
 
 // --- Komponen Ikon SVG ---
 const IconShoppingCart = () => (
@@ -17,16 +21,16 @@ const IconX = () => (
     <line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line>
   </svg>
 );
-const IconPackageCheck = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="success-icon">
-    <path d="m16 16 2 2 4-4"></path><path d="M21 10V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l2-1.14"></path><path d="M16.5 9.4 7.55 4.24"></path><polyline points="3.29 7 12 12 20.71 7"></polyline><line x1="12" y1="22" x2="12" y2="12"></line>
-  </svg>
-);
-const IconInfo = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="info-icon">
-    <circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line>
-  </svg>
-);
+// const IconPackageCheck = () => (
+//   <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="success-icon">
+//     <path d="m16 16 2 2 4-4"></path><path d="M21 10V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l2-1.14"></path><path d="M16.5 9.4 7.55 4.24"></path><polyline points="3.29 7 12 12 20.71 7"></polyline><line x1="12" y1="22" x2="12" y2="12"></line>
+//   </svg>
+// );
+// const IconInfo = () => (
+//   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="info-icon">
+//     <circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line>
+//   </svg>
+// );
 const IconTrash = () => (
     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
 );
@@ -36,57 +40,77 @@ export default function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  
+  // --- STATE BARU UNTUK KERANJANG & NOTIFIKASI ---
   const [cartItems, setCartItems] = useState([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [notification, setNotification] = useState(null);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    const mockProducts = [
-        { id: 1, name: 'Tote Bag Rajut Bumi', price: 150000, imageUrl: 'https://i.pinimg.com/736x/4e/c3/15/4ec315163f780a7efa460e4bb0c0cc14.jpg' },
-        { id: 2, name: 'Dompet Kulit Vegan', price: 75000, imageUrl: 'https://i.pinimg.com/1200x/f8/21/5d/f8215d93484a2fee24647cc169f419bd.jpg' },
-        { id: 3, name: 'Kemeja Linen Natural', price: 180000, imageUrl: 'https://down-id.img.susercontent.com/file/id-11134207-7r98p-lln2e72130xdc2@resize_w900_nl.webp' },
-        { id: 4, name: 'Sandal Jerami Anyam', price: 120000, imageUrl: 'https://i.pinimg.com/736x/15/2a/ed/152aed6a8b78c2fa82c644fa47cd3fc9.jpg' },
-    ];
-    setTimeout(() => {
-      setProducts(mockProducts);
+    const fetchProducts = async () => {
+      setIsLoading(true);
+      try {
+        const querySnapshot = await getDocs(collection(db, "products"));
+        const productsList = querySnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+        setProducts(productsList);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+        setError("Oops, gagal memuat produk. Silakan coba muat ulang halaman nanti.");
+        // Di sini kamu bisa menambahkan state untuk menampilkan pesan error di UI jika perlu
+      }
       setIsLoading(false);
-    }, 1500);
+    };
+
+    fetchProducts();
   }, []);
 
+  // --- FUNGSI BARU UNTUK MENGELOLA KERANJANG & NOTIFIKASI ---
   useEffect(() => {
     if (notification) {
-      const timer = setTimeout(() => setNotification(null), 3000);
+      const timer = setTimeout(() => {
+        setNotification(null);
+      }, 3000);
       return () => clearTimeout(timer);
     }
   }, [notification]);
 
+  // --- REVISI 1: Logika "Tambah ke Keranjang" ---
   const handleAddToCart = (productToAdd) => {
     setCartItems(prevItems => {
       const existingItem = prevItems.find(item => item.id === productToAdd.id);
       if (existingItem) {
+        // Jika barang sudah ada, tambah quantity-nya
         return prevItems.map(item =>
           item.id === productToAdd.id ? { ...item, quantity: item.quantity + 1 } : item
         );
       }
+      // Jika barang baru, tambahkan ke keranjang dengan quantity 1 dan status terpilih (checked)
       return [...prevItems, { ...productToAdd, quantity: 1, selected: true }];
     });
     setNotification(`${productToAdd.name} telah ditambahkan ke keranjang!`);
   };
 
+  // --- REVISI 3: Logika "Hapus dari Keranjang" ---
   const handleRemoveFromCart = (productIdToRemove) => {
     setCartItems(prevItems => prevItems.filter(item => item.id !== productIdToRemove));
   };
 
+  // --- FUNGSI BARU: Logika "Ubah Jumlah Barang" ---
   const handleUpdateQuantity = (productId, amount) => {
     setCartItems(prevItems =>
         prevItems.map(item =>
             item.id === productId
-                ? { ...item, quantity: Math.max(1, item.quantity + amount) }
+                ? { ...item, quantity: Math.max(1, item.quantity + amount) } // Pastikan jumlah tidak kurang dari 1
                 : item
         )
     );
   };
 
+  // --- REVISI 2: Logika "Checklist" ---
   const handleToggleSelectItem = (productIdToToggle) => {
       setCartItems(prevItems =>
         prevItems.map(item =>
@@ -99,8 +123,9 @@ export default function App() {
   const handleCloseModal = () => setIsModalOpen(false);
   const toggleCart = () => setIsCartOpen(!isCartOpen);
 
+  // Hitung total item untuk badge di ikon keranjang
   const totalCartQuantity = cartItems.reduce((total, item) => total + item.quantity, 0);
-
+  console.log("INI DATA PRODUK YG DITERIMA KODE:", products);
   return (
     <div className="app-container">
       <Header cartItemCount={totalCartQuantity} onCartClick={toggleCart} />
@@ -109,7 +134,22 @@ export default function App() {
         <section className="catalog-section">
           <h2>Produk Hasil Daur Ulang</h2>
           <p>Beli produk keren sambil membantu bumi.</p>
-          <ProductCatalog products={products} isLoading={isLoading} onAddToCart={handleAddToCart} />
+          
+          {/* ===== PASTIKAN BAGIAN INI ADA ===== */}
+          {error ? (
+            <div className="error-ui-message">
+              {/* Di sini variabel 'error' dipakai untuk ditampilkan */}
+              <p>{error}</p> 
+            </div>
+          ) : (
+            <ProductCatalog 
+              products={products} 
+              isLoading={isLoading} 
+              onAddToCart={handleAddToCart} 
+            />
+          )}
+          {/* ======================================= */}
+
         </section>
       </main>
       <Footer />
@@ -205,120 +245,60 @@ function ProductSkeleton() {
   );
 }
 
-// --- Komponen AI Checker ---
-function AIChecker() {
-    const [image, setImage] = useState(null);
-    const [previewUrl, setPreviewUrl] = useState('');
-    const [result, setResult] = useState(null);
-    const [isChecking, setIsChecking] = useState(false);
-
-    const handleImageChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            setImage(file);
-            setPreviewUrl(URL.createObjectURL(file));
-            setResult(null);
-        }
-    };
-
-    const handleCheckCondition = () => {
-        if (!image) return;
-        setIsChecking(true);
-        setResult(null);
-        // Simulasi proses AI
-        setTimeout(() => {
-            const mockResult = {
-                condition: "Layak Didaur Ulang",
-                notes: ["Warna sedikit pudar", "Tidak ada sobekan", "Bahan katun berkualitas baik"]
-            };
-            setResult(mockResult);
-            setIsChecking(false);
-        }, 2000);
-    };
-
-    return (
-        // --- REVISI STRUKTUR JSX ---
-        <div className="ai-checker-container">
-            <div className="ai-checker-header">
-                <h3 className="ai-checker-title">Cek Kondisi Pakaian dengan AI</h3>
-                <p className="ai-checker-subtitle">Unggah foto pakaian bekasmu untuk diperiksa oleh sistem cerdas kami.</p>
-            </div>
-            <div className="ai-checker-section">
-                <div className="image-uploader">
-                    {previewUrl ? (
-                        <img src={previewUrl} alt="Preview" className="image-preview" />
-                    ) : (
-                        <div className="upload-placeholder">
-                            <p>Pilih Gambar</p>
-                        </div>
-                    )}
-                    <input type="file" accept="image/*" onChange={handleImageChange} className="file-input" />
-                </div>
-                {image && !result && (
-                     <button onClick={handleCheckCondition} disabled={isChecking} className="button-primary check-button">
-                        {isChecking ? (
-                            <svg className="spinner" viewBox="0 0 50 50"><circle className="path" cx="25" cy="25" r="20" fill="none" strokeWidth="5"></circle></svg>
-                        ) : (
-                            'Periksa Kondisi Sekarang'
-                        )}
-                    </button>
-                )}
-                {result && (
-                    <div className={`ai-result ${result.condition === 'Layak Didaur Ulang' ? 'result-accepted' : 'result-rejected'}`}>
-                        <h3>Hasil Pengecekan: {result.condition}</h3>
-                        <h4>Catatan:</h4>
-                        <ul>
-                            {result.notes.map((note, index) => <li key={index}>{note}</li>)}
-                        </ul>
-                    </div>
-                )}
-            </div>
-        </div>
-    );
-}
-
 function SubmissionModal({ onClose }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [aiResult, setAiResult] = useState(null); // state baru simpan hasil AI
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     setIsSubmitting(true);
-    setTimeout(() => {
-      setIsSubmitting(false);
+
+    const formData = new FormData(event.target);
+
+    // Gabung data form + hasil AI
+    const dataToSave = {
+      namaLengkap: formData.get("fullName"),
+      alamatPenjemputan: formData.get("address"),
+      jenisBarang: formData.get("itemType"),
+      deskripsiKondisi: formData.get("itemDescription"),
+      createdAt: serverTimestamp(),
+      status: "pending",
+      aiStatus: aiResult?.status || null,
+      aiKategori: aiResult?.kategori || null,
+      aiSaranUpcycle: aiResult?.saran_upcycle || []
+    };
+
+    try {
+      await addDoc(collection(db, "recycles"), dataToSave);
       setSubmitSuccess(true);
-    }, 2000);
+    } catch (error) {
+      console.error("Error simpan data:", error);
+      alert("Gagal menyimpan data, coba lagi.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
     <div className="modal-overlay">
       <div className="modal-content">
-        <button onClick={onClose} className="modal-close-button">
-          <IconX />
-        </button>
+        <button onClick={onClose} className="modal-close-button">✕</button>
+
         {submitSuccess ? (
           <div className="modal-success-view">
-            <IconPackageCheck />
             <h2>Terima Kasih!</h2>
-            <p>Formulir pengirimanmu telah kami terima. Tim kami akan segera meninjau dan menghubungimu untuk proses selanjutnya.</p>
+            <p>Formulir pengirimanmu telah kami terima.</p>
             <button onClick={onClose} className="button-primary">Tutup</button>
           </div>
         ) : (
           <>
             <h2>Kirim Barang Bekasmu</h2>
-            <p className="modal-subtitle">Isi detail di bawah ini untuk memulai proses daur ulang.</p>
-            <div className="info-box">
-              <IconInfo />
-              <div>
-                <h4>Kriteria Penukaran Barang</h4>
-                <ul>
-                  <li>Pakaian harus bersih dan tidak berbau.</li>
-                  <li>Tidak ada sobekan besar atau noda permanen.</li>
-                  <li>Semua jenis pakaian dewasa dan anak-anak diterima.</li>
-                  <li>Minimal pengiriman 3 potong pakaian.</li>
-                </ul>
-              </div>
-            </div>
+            <p className="modal-subtitle">Isi detail + cek kondisi barangmu dengan AI.</p>
+
+            {/* 🔍 Tambahin AI Checker di atas form */}
+            <AIChecker onCheckComplete={setAiResult} />
+
             <form onSubmit={handleSubmit} className="modal-form">
               <div className="form-group">
                 <label htmlFor="fullName">Nama Lengkap</label>
@@ -336,10 +316,8 @@ function SubmissionModal({ onClose }) {
               </div>
               <div className="form-group">
                 <label htmlFor="itemDescription">Deskripsi/Kondisi Barang</label>
-                <textarea id="itemDescription" name="itemDescription" rows="3" placeholder="Contoh: Kemeja katun biru, sedikit pudar..." required></textarea>
+                <textarea id="itemDescription" name="itemDescription" rows="3" required></textarea>
               </div>
-              
-              <AIChecker />
 
               <button type="submit" disabled={isSubmitting} className="button-primary">
                 {isSubmitting ? 'Mengirim...' : 'Kirim Detail Barang'}
@@ -351,6 +329,9 @@ function SubmissionModal({ onClose }) {
     </div>
   );
 }
+
+export {SubmissionModal};
+
 
 function Footer() {
   return (
@@ -394,7 +375,9 @@ function Notification({ message }) {
   );
 }
 
+// --- REVISI KOMPONEN KERANJANG ---
 function ShoppingCart({ items, onClose, onRemove, onToggleSelect, onUpdateQuantity }) {
+    // --- REVISI 2: Hitung total harga hanya untuk item yang dipilih ---
     const totalPrice = items
         .filter(item => item.selected)
         .reduce((total, item) => total + (item.price * item.quantity), 0);
@@ -422,6 +405,7 @@ function ShoppingCart({ items, onClose, onRemove, onToggleSelect, onUpdateQuanti
                                 <div className="cart-item-info">
                                     <h4>{item.name}</h4>
                                     <p>Rp {item.price.toLocaleString('id-ID')}</p>
+                                    {/* --- REVISI: Penyesuai Jumlah Barang --- */}
                                     <div className="quantity-adjuster">
                                         <button onClick={() => onUpdateQuantity(item.id, -1)} className="quantity-btn">-</button>
                                         <span className="quantity-display">{item.quantity}</span>

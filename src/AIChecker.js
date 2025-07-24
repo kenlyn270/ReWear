@@ -1,4 +1,4 @@
-// File: src/AIChecker.js (Buat file baru ini)
+// File: src/AIChecker.js (Versi yang sudah diupdate)
 
 import React, { useState } from 'react';
 
@@ -44,10 +44,47 @@ export default function AIChecker() {
     setError(null);
     setAiResponse(null);
 
-    // --- PANGGIL GEMINI API DI SINI ---
+    // PENTING: Ganti dengan API Key kamu sendiri dari Google AI Studio
+    const apiKey = "AIzaSyAO8MAq9ET_RjiSpO4kc0lh0evPjd4mgKU"; // GANTI DENGAN API KEY-MU
+    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
     try {
-      // Ini adalah prompt atau perintah untuk AI
-      const prompt = `
+      // --- TAHAP 1: Validasi Gambar ---
+      // Prompt ini bertanya ke AI apakah gambar tersebut adalah pakaian.
+      const validationPrompt = `Apakah subjek utama dari gambar ini adalah item pakaian (seperti baju, celana, gaun, jaket)? Jangan analisis kondisinya. Jawab HANYA dengan satu kata: "Ya" atau "Tidak".`;
+
+      const validationPayload = {
+        contents: [{
+          parts: [
+            { text: validationPrompt },
+            { inlineData: { mimeType: "image/jpeg", data: imageBase64 } }
+          ]
+        }]
+      };
+
+      const validationResponse = await fetch(apiUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(validationPayload)
+      });
+
+      if (!validationResponse.ok) {
+        throw new Error(`Permintaan API validasi gagal dengan status ${validationResponse.status}`);
+      }
+
+      const validationResult = await validationResponse.json();
+      const validationText = validationResult.candidates[0].content.parts[0].text.trim();
+
+      // Jika jawaban AI bukan "Ya", tampilkan error dan hentikan proses.
+      if (validationText.toLowerCase() !== 'ya') {
+        setError("Gambar tidak valid. Harap unggah foto pakaian yang jelas.");
+        setIsLoading(false);
+        return;
+      }
+
+      // --- TAHAP 2: Jika Valid, Analisis Kondisi Pakaian ---
+      // Prompt ini sama seperti sebelumnya, untuk mengecek kondisi.
+      const conditionPrompt = `
         Analisis gambar pakaian ini dengan seksama.
         Tugasmu adalah:
         1. Tentukan apakah pakaian ini memenuhi kriteria "layak pakai" untuk program daur ulang. Kriteria "tidak layak" adalah jika ada kerusakan parah seperti sobekan yang sangat besar, bolong, atau noda yang sangat banyak dan mencolok.
@@ -69,42 +106,24 @@ export default function AIChecker() {
         Jika status "Diterima", biarkan "kategori" dan "saran_upcycle" sebagai string kosong atau array kosong.
       `;
 
-      // Menyiapkan data untuk dikirim ke API
-      const payload = {
-        contents: [
-          {
-            parts: [
-              { text: prompt },
-              {
-                inlineData: {
-                  mimeType: "image/jpeg",
-                  data: imageBase64
-                }
-              }
-            ]
-          }
-        ]
+      const conditionPayload = {
+        contents: [{
+          parts: [{ text: conditionPrompt }, { inlineData: { mimeType: "image/jpeg", data: imageBase64 } }]
+        }]
       };
       
-      // PENTING: Ganti dengan API Key kamu sendiri dari Google AI Studio
-      const apiKey = "AIzaSyAO8MAq9ET_RjiSpO4kc0lh0evPjd4mgKU"; 
-      const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
-
-      const response = await fetch(apiUrl, {
+      const conditionResponse = await fetch(apiUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
+        body: JSON.stringify(conditionPayload)
       });
       
-      if (!response.ok) {
-        throw new Error(`API request failed with status ${response.status}`);
+      if (!conditionResponse.ok) {
+        throw new Error(`Permintaan API kondisi gagal dengan status ${conditionResponse.status}`);
       }
 
-      const result = await response.json();
-      
-      // Mengambil dan mem-parsing teks JSON dari respons AI
+      const result = await conditionResponse.json();
       const responseText = result.candidates[0].content.parts[0].text;
-      // Membersihkan teks respons sebelum parsing JSON
       const cleanedText = responseText.replace(/```json/g, '').replace(/```/g, '').trim();
       const parsedResponse = JSON.parse(cleanedText);
       setAiResponse(parsedResponse);
