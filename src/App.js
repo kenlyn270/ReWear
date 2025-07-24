@@ -27,12 +27,20 @@ const IconInfo = () => (
     <circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line>
   </svg>
 );
+const IconTrash = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+);
 
 // --- Komponen Utama Aplikasi ---
 export default function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  
+  // --- STATE BARU UNTUK KERANJANG & NOTIFIKASI ---
+  const [cartItems, setCartItems] = useState([]);
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const [notification, setNotification] = useState(null);
 
   useEffect(() => {
     const mockProducts = [
@@ -47,28 +55,85 @@ export default function App() {
     }, 1500);
   }, []);
 
+  // --- FUNGSI BARU UNTUK MENGELOLA KERANJANG & NOTIFIKASI ---
+  useEffect(() => {
+    if (notification) {
+      const timer = setTimeout(() => {
+        setNotification(null);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [notification]);
+
+  // --- REVISI 1: Logika "Tambah ke Keranjang" ---
+  const handleAddToCart = (productToAdd) => {
+    setCartItems(prevItems => {
+      const existingItem = prevItems.find(item => item.id === productToAdd.id);
+      if (existingItem) {
+        // Jika barang sudah ada, tambah quantity-nya
+        return prevItems.map(item =>
+          item.id === productToAdd.id ? { ...item, quantity: item.quantity + 1 } : item
+        );
+      }
+      // Jika barang baru, tambahkan ke keranjang dengan quantity 1 dan status terpilih (checked)
+      return [...prevItems, { ...productToAdd, quantity: 1, selected: true }];
+    });
+    setNotification(`${productToAdd.name} telah ditambahkan ke keranjang!`);
+  };
+
+  // --- REVISI 3: Logika "Hapus dari Keranjang" ---
+  const handleRemoveFromCart = (productIdToRemove) => {
+    setCartItems(prevItems => prevItems.filter(item => item.id !== productIdToRemove));
+  };
+
+  // --- FUNGSI BARU: Logika "Ubah Jumlah Barang" ---
+  const handleUpdateQuantity = (productId, amount) => {
+    setCartItems(prevItems =>
+        prevItems.map(item =>
+            item.id === productId
+                ? { ...item, quantity: Math.max(1, item.quantity + amount) } // Pastikan jumlah tidak kurang dari 1
+                : item
+        )
+    );
+  };
+
+  // --- REVISI 2: Logika "Checklist" ---
+  const handleToggleSelectItem = (productIdToToggle) => {
+      setCartItems(prevItems =>
+        prevItems.map(item =>
+            item.id === productIdToToggle ? { ...item, selected: !item.selected } : item
+        )
+      );
+  };
+
   const handleOpenModal = () => setIsModalOpen(true);
   const handleCloseModal = () => setIsModalOpen(false);
+  const toggleCart = () => setIsCartOpen(!isCartOpen);
+
+  // Hitung total item untuk badge di ikon keranjang
+  const totalCartQuantity = cartItems.reduce((total, item) => total + item.quantity, 0);
 
   return (
     <div className="app-container">
-      <Header />
+      <Header cartItemCount={totalCartQuantity} onCartClick={toggleCart} />
       <main>
         <HeroSection onSendClick={handleOpenModal} />
         <section className="catalog-section">
           <h2>Produk Hasil Daur Ulang</h2>
           <p>Beli produk keren sambil membantu bumi.</p>
-          <ProductCatalog products={products} isLoading={isLoading} />
+          <ProductCatalog products={products} isLoading={isLoading} onAddToCart={handleAddToCart} />
         </section>
       </main>
       <Footer />
       {isModalOpen && <SubmissionModal onClose={handleCloseModal} />}
+      {isCartOpen && <ShoppingCart items={cartItems} onClose={toggleCart} onRemove={handleRemoveFromCart} onToggleSelect={handleToggleSelectItem} onUpdateQuantity={handleUpdateQuantity} />}
+      {notification && <Notification message={notification} />}
     </div>
   );
 }
 
 // --- Komponen-komponen Pendukung ---
-function Header() {
+function Header({ cartItemCount, onCartClick }) {
   const navItems = ['Woman', 'Men', 'Kids', 'Baby'];
   return (
     <header className="app-header">
@@ -77,6 +142,10 @@ function Header() {
         <div className="nav-links">
           {navItems.map(item => <a key={item} href="/#">{item}</a>)}
           <a href="/#" className="active">Recycle</a>
+          <button onClick={onCartClick} className="cart-button">
+            <IconShoppingCart />
+            {cartItemCount > 0 && <span className="cart-badge">{cartItemCount}</span>}
+          </button>
         </div>
         <button className="mobile-menu-button">
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
@@ -103,7 +172,7 @@ function HeroSection({ onSendClick }) {
   );
 }
 
-function ProductCatalog({ products, isLoading }) {
+function ProductCatalog({ products, isLoading, onAddToCart }) {
   if (isLoading) {
     return (
       <div className="product-grid">
@@ -113,12 +182,12 @@ function ProductCatalog({ products, isLoading }) {
   }
   return (
     <div className="product-grid">
-      {products.map(product => <ProductCard key={product.id} product={product} />)}
+      {products.map(product => <ProductCard key={product.id} product={product} onAddToCart={onAddToCart} />)}
     </div>
   );
 }
 
-function ProductCard({ product }) {
+function ProductCard({ product, onAddToCart }) {
   return (
     <div className="product-card">
       <div className="product-image-wrapper">
@@ -127,7 +196,7 @@ function ProductCard({ product }) {
       <div className="product-info">
         <h3>{product.name}</h3>
         <p>Rp {product.price.toLocaleString('id-ID')}</p>
-        <button className="add-to-cart-button">
+        <button onClick={() => onAddToCart(product)} className="add-to-cart-button">
           <IconShoppingCart /> Tambah ke Keranjang
         </button>
       </div>
@@ -252,4 +321,68 @@ function Footer() {
       </div>
     </footer>
   );
+}
+
+function Notification({ message }) {
+  return (
+    <div className="notification-popup">
+      {message}
+    </div>
+  );
+}
+
+// --- REVISI KOMPONEN KERANJANG ---
+function ShoppingCart({ items, onClose, onRemove, onToggleSelect, onUpdateQuantity }) {
+    // --- REVISI 2: Hitung total harga hanya untuk item yang dipilih ---
+    const totalPrice = items
+        .filter(item => item.selected)
+        .reduce((total, item) => total + (item.price * item.quantity), 0);
+
+    return (
+        <div className="cart-overlay" onClick={onClose}>
+            <div className="cart-panel" onClick={(e) => e.stopPropagation()}>
+                <div className="cart-header">
+                    <h3>Keranjang Belanja</h3>
+                    <button onClick={onClose} className="modal-close-button"><IconX /></button>
+                </div>
+                <div className="cart-items">
+                    {items.length === 0 ? (
+                        <p className="cart-empty">Keranjangmu masih kosong.</p>
+                    ) : (
+                        items.map((item) => (
+                            <div key={item.id} className="cart-item">
+                                <input 
+                                    type="checkbox" 
+                                    className="cart-item-checkbox" 
+                                    checked={item.selected}
+                                    onChange={() => onToggleSelect(item.id)}
+                                />
+                                <img src={item.imageUrl} alt={item.name} className="cart-item-image" />
+                                <div className="cart-item-info">
+                                    <h4>{item.name}</h4>
+                                    <p>Rp {item.price.toLocaleString('id-ID')}</p>
+                                    {/* --- REVISI: Penyesuai Jumlah Barang --- */}
+                                    <div className="quantity-adjuster">
+                                        <button onClick={() => onUpdateQuantity(item.id, -1)} className="quantity-btn">-</button>
+                                        <span className="quantity-display">{item.quantity}</span>
+                                        <button onClick={() => onUpdateQuantity(item.id, 1)} className="quantity-btn">+</button>
+                                    </div>
+                                </div>
+                                <button onClick={() => onRemove(item.id)} className="cart-item-remove"><IconTrash /></button>
+                            </div>
+                        ))
+                    )}
+                </div>
+                {items.length > 0 && (
+                    <div className="cart-footer">
+                        <div className="cart-total">
+                            <span>Total</span>
+                            <span>Rp {totalPrice.toLocaleString('id-ID')}</span>
+                        </div>
+                        <button className="button-primary">Checkout</button>
+                    </div>
+                )}
+            </div>
+        </div>
+    );
 }
