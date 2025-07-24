@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import './App.css'; // Penting: Import file CSS
-import AIChecker from './AIChecker'; // <-- Tambahkan import untuk komponen AI
 
 // --- Komponen Ikon SVG ---
 const IconShoppingCart = () => (
@@ -37,18 +36,16 @@ export default function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  
-  // --- STATE BARU UNTUK KERANJANG & NOTIFIKASI ---
   const [cartItems, setCartItems] = useState([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [notification, setNotification] = useState(null);
 
   useEffect(() => {
     const mockProducts = [
-      { id: 1, name: 'Tote Bag Rajut Bumi', price: 150000, imageUrl: 'https://placehold.co/600x400/D2B48C/8B4513?text=Tote+Bag' },
-      { id: 2, name: 'Dompet Kulit Vegan', price: 75000, imageUrl: 'https://placehold.co/600x400/BC8F8F/8B4513?text=Dompet' },
-      { id: 3, name: 'Kemeja Linen Natural', price: 180000, imageUrl: 'https://placehold.co/600x400/F5DEB3/8B4513?text=Kemeja' },
-      { id: 4, name: 'Sandal Jerami Anyam', price: 120000, imageUrl: 'https://placehold.co/600x400/CD853F/8B4513?text=Sandal' },
+        { id: 1, name: 'Tote Bag Rajut Bumi', price: 150000, imageUrl: 'https://i.pinimg.com/736x/4e/c3/15/4ec315163f780a7efa460e4bb0c0cc14.jpg' },
+        { id: 2, name: 'Dompet Kulit Vegan', price: 75000, imageUrl: 'https://i.pinimg.com/1200x/f8/21/5d/f8215d93484a2fee24647cc169f419bd.jpg' },
+        { id: 3, name: 'Kemeja Linen Natural', price: 180000, imageUrl: 'https://down-id.img.susercontent.com/file/id-11134207-7r98p-lln2e72130xdc2@resize_w900_nl.webp' },
+        { id: 4, name: 'Sandal Jerami Anyam', price: 120000, imageUrl: 'https://i.pinimg.com/736x/15/2a/ed/152aed6a8b78c2fa82c644fa47cd3fc9.jpg' },
     ];
     setTimeout(() => {
       setProducts(mockProducts);
@@ -56,49 +53,40 @@ export default function App() {
     }, 1500);
   }, []);
 
-  // --- FUNGSI BARU UNTUK MENGELOLA KERANJANG & NOTIFIKASI ---
   useEffect(() => {
     if (notification) {
-      const timer = setTimeout(() => {
-        setNotification(null);
-      }, 3000);
+      const timer = setTimeout(() => setNotification(null), 3000);
       return () => clearTimeout(timer);
     }
   }, [notification]);
 
-  // --- REVISI 1: Logika "Tambah ke Keranjang" ---
   const handleAddToCart = (productToAdd) => {
     setCartItems(prevItems => {
       const existingItem = prevItems.find(item => item.id === productToAdd.id);
       if (existingItem) {
-        // Jika barang sudah ada, tambah quantity-nya
         return prevItems.map(item =>
           item.id === productToAdd.id ? { ...item, quantity: item.quantity + 1 } : item
         );
       }
-      // Jika barang baru, tambahkan ke keranjang dengan quantity 1 dan status terpilih (checked)
       return [...prevItems, { ...productToAdd, quantity: 1, selected: true }];
     });
     setNotification(`${productToAdd.name} telah ditambahkan ke keranjang!`);
   };
 
-  // --- REVISI 3: Logika "Hapus dari Keranjang" ---
   const handleRemoveFromCart = (productIdToRemove) => {
     setCartItems(prevItems => prevItems.filter(item => item.id !== productIdToRemove));
   };
 
-  // --- FUNGSI BARU: Logika "Ubah Jumlah Barang" ---
   const handleUpdateQuantity = (productId, amount) => {
     setCartItems(prevItems =>
         prevItems.map(item =>
             item.id === productId
-                ? { ...item, quantity: Math.max(1, item.quantity + amount) } // Pastikan jumlah tidak kurang dari 1
+                ? { ...item, quantity: Math.max(1, item.quantity + amount) }
                 : item
         )
     );
   };
 
-  // --- REVISI 2: Logika "Checklist" ---
   const handleToggleSelectItem = (productIdToToggle) => {
       setCartItems(prevItems =>
         prevItems.map(item =>
@@ -111,7 +99,6 @@ export default function App() {
   const handleCloseModal = () => setIsModalOpen(false);
   const toggleCart = () => setIsCartOpen(!isCartOpen);
 
-  // Hitung total item untuk badge di ikon keranjang
   const totalCartQuantity = cartItems.reduce((total, item) => total + item.quantity, 0);
 
   return (
@@ -124,12 +111,6 @@ export default function App() {
           <p>Beli produk keren sambil membantu bumi.</p>
           <ProductCatalog products={products} isLoading={isLoading} onAddToCart={handleAddToCart} />
         </section>
-        
-        {/* ====================================================== */}
-        {/* ===> DI SINI KITA TAMBAHKAN KOMPONEN AI CHECKER <=== */}
-        {/* ====================================================== */}
-        <AIChecker />
-
       </main>
       <Footer />
       {isModalOpen && <SubmissionModal onClose={handleCloseModal} />}
@@ -224,6 +205,78 @@ function ProductSkeleton() {
   );
 }
 
+// --- Komponen AI Checker ---
+function AIChecker() {
+    const [image, setImage] = useState(null);
+    const [previewUrl, setPreviewUrl] = useState('');
+    const [result, setResult] = useState(null);
+    const [isChecking, setIsChecking] = useState(false);
+
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setImage(file);
+            setPreviewUrl(URL.createObjectURL(file));
+            setResult(null);
+        }
+    };
+
+    const handleCheckCondition = () => {
+        if (!image) return;
+        setIsChecking(true);
+        setResult(null);
+        // Simulasi proses AI
+        setTimeout(() => {
+            const mockResult = {
+                condition: "Layak Didaur Ulang",
+                notes: ["Warna sedikit pudar", "Tidak ada sobekan", "Bahan katun berkualitas baik"]
+            };
+            setResult(mockResult);
+            setIsChecking(false);
+        }, 2000);
+    };
+
+    return (
+        // --- REVISI STRUKTUR JSX ---
+        <div className="ai-checker-container">
+            <div className="ai-checker-header">
+                <h3 className="ai-checker-title">Cek Kondisi Pakaian dengan AI</h3>
+                <p className="ai-checker-subtitle">Unggah foto pakaian bekasmu untuk diperiksa oleh sistem cerdas kami.</p>
+            </div>
+            <div className="ai-checker-section">
+                <div className="image-uploader">
+                    {previewUrl ? (
+                        <img src={previewUrl} alt="Preview" className="image-preview" />
+                    ) : (
+                        <div className="upload-placeholder">
+                            <p>Pilih Gambar</p>
+                        </div>
+                    )}
+                    <input type="file" accept="image/*" onChange={handleImageChange} className="file-input" />
+                </div>
+                {image && !result && (
+                     <button onClick={handleCheckCondition} disabled={isChecking} className="button-primary check-button">
+                        {isChecking ? (
+                            <svg className="spinner" viewBox="0 0 50 50"><circle className="path" cx="25" cy="25" r="20" fill="none" strokeWidth="5"></circle></svg>
+                        ) : (
+                            'Periksa Kondisi Sekarang'
+                        )}
+                    </button>
+                )}
+                {result && (
+                    <div className={`ai-result ${result.condition === 'Layak Didaur Ulang' ? 'result-accepted' : 'result-rejected'}`}>
+                        <h3>Hasil Pengecekan: {result.condition}</h3>
+                        <h4>Catatan:</h4>
+                        <ul>
+                            {result.notes.map((note, index) => <li key={index}>{note}</li>)}
+                        </ul>
+                    </div>
+                )}
+            </div>
+        </div>
+    );
+}
+
 function SubmissionModal({ onClose }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
@@ -285,6 +338,9 @@ function SubmissionModal({ onClose }) {
                 <label htmlFor="itemDescription">Deskripsi/Kondisi Barang</label>
                 <textarea id="itemDescription" name="itemDescription" rows="3" placeholder="Contoh: Kemeja katun biru, sedikit pudar..." required></textarea>
               </div>
+              
+              <AIChecker />
+
               <button type="submit" disabled={isSubmitting} className="button-primary">
                 {isSubmitting ? 'Mengirim...' : 'Kirim Detail Barang'}
               </button>
@@ -338,9 +394,7 @@ function Notification({ message }) {
   );
 }
 
-// --- REVISI KOMPONEN KERANJANG ---
 function ShoppingCart({ items, onClose, onRemove, onToggleSelect, onUpdateQuantity }) {
-    // --- REVISI 2: Hitung total harga hanya untuk item yang dipilih ---
     const totalPrice = items
         .filter(item => item.selected)
         .reduce((total, item) => total + (item.price * item.quantity), 0);
@@ -368,7 +422,6 @@ function ShoppingCart({ items, onClose, onRemove, onToggleSelect, onUpdateQuanti
                                 <div className="cart-item-info">
                                     <h4>{item.name}</h4>
                                     <p>Rp {item.price.toLocaleString('id-ID')}</p>
-                                    {/* --- REVISI: Penyesuai Jumlah Barang --- */}
                                     <div className="quantity-adjuster">
                                         <button onClick={() => onUpdateQuantity(item.id, -1)} className="quantity-btn">-</button>
                                         <span className="quantity-display">{item.quantity}</span>
