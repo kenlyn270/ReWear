@@ -394,6 +394,67 @@ main {
 }
 .footer-bottom p { color: var(--color-text-light); font-size: 0.875rem; }
 
+/* --- AI Checker Section Styles --- */
+.ai-checker-section {
+  text-align: center;
+  margin: 4rem auto;
+  padding: 2rem 1rem;
+  background-color: var(--color-white);
+  border-radius: 1rem;
+  box-shadow: var(--shadow-md);
+  max-width: 56rem;
+}
+.ai-checker-section h2 { font-size: 2rem; font-weight: bold; color: var(--color-text); }
+.ai-checker-section p { color: var(--color-text-light); margin-top: 0.5rem; }
+
+.ai-checker-box {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.image-uploader {
+  width: 100%;
+  max-width: 400px;
+  height: 300px;
+  border: 2px dashed #D6D3D1;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  background-color: #F5F5F4;
+}
+
+.image-preview { width: 100%; height: 100%; object-fit: contain; border-radius: 0.5rem; }
+.upload-placeholder p { color: var(--color-text-light); }
+.file-input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+
+.check-button { width: auto; padding: 0.75rem 2rem; }
+.error-message { color: #DC2626; margin-top: 1rem; }
+
+.ai-result { 
+  margin-top: 1.5rem; 
+  padding: 1.5rem; 
+  border-radius: 0.5rem; 
+  text-align: left;
+  width: 100%;
+  max-width: 500px;
+}
+.result-accepted { background-color: #D1FAE5; border: 1px solid #6EE7B7; }
+.result-rejected { background-color: #FEE2E2; border: 1px solid #FCA5A5; }
+.ai-result h3 { font-weight: bold; font-size: 1.25rem; }
+.ai-result h4 { font-weight: bold; margin-top: 1rem; }
+.ai-result ul { margin-top: 0.5rem; padding-left: 1.5rem; }
+.ai-result li { margin-bottom: 0.5rem; }
+
+.spinner { animation: rotate 2s linear infinite; width: 24px; height: 24px; }
+.spinner .path { stroke: var(--color-primary); stroke-linecap: round; animation: dash 1.5s ease-in-out infinite; }
+@keyframes rotate { 100% { transform: rotate(360deg); } }
+@keyframes dash { 0% { stroke-dasharray: 1, 150; stroke-dashoffset: 0; } 50% { stroke-dasharray: 90, 150; stroke-dashoffset: -35; } 100% { stroke-dasharray: 90, 150; stroke-dashoffset: -124; } }
+
 /* --- STYLE BARU UNTUK KERANJANG & NOTIFIKASI --- */
 .cart-button {
     position: relative;

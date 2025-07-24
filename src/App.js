@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './App.css'; // Penting: Import file CSS
+import AIChecker from './AIChecker'; // <-- Tambahkan import untuk komponen AI
 
 // --- Komponen Ikon SVG ---
 const IconShoppingCart = () => (
@@ -123,6 +124,12 @@ export default function App() {
           <p>Beli produk keren sambil membantu bumi.</p>
           <ProductCatalog products={products} isLoading={isLoading} onAddToCart={handleAddToCart} />
         </section>
+        
+        {/* ====================================================== */}
+        {/* ===> DI SINI KITA TAMBAHKAN KOMPONEN AI CHECKER <=== */}
+        {/* ====================================================== */}
+        <AIChecker />
+
       </main>
       <Footer />
       {isModalOpen && <SubmissionModal onClose={handleCloseModal} />}
