@@ -3,6 +3,7 @@ import './App.css'; // Penting: Import file CSS
 import AIChecker from './AIChecker'; // <-- Tambahkan import untuk komponen AI
 import { collection, addDoc, serverTimestamp, getDocs } from "firebase/firestore";
 import { db } from "./firebase";
+import { useAuth } from './AuthContext';
 
 // --- Komponen Ikon SVG ---
 const IconShoppingCart = () => (
@@ -222,6 +223,7 @@ function ProductSkeleton() {
 }
 
 function SubmissionModal({ onClose, setNotification }) {
+  const { currentUser } = useAuth();
   const [formData, setFormData] = useState({
     fullName: '',
     address: '',
@@ -287,14 +289,14 @@ function SubmissionModal({ onClose, setNotification }) {
     setIsSubmitting(true);
 
     const dataToSave = {
+      userId: currentUser.uid,
       namaLengkap: formData.fullName,
       metodePengiriman: formData.deliveryOption, 
       alamatPenjemputan: formData.address,
-      nomorTelepon: formData.noTelp,
+      status: "pending",
       jenisBarang: formData.itemType,
       deskripsiKondisi: formData.itemDescription,
       createdAt: serverTimestamp(),
-      status: "pending",
       aiStatus: aiResult?.status || aiResult?.hasil || null,
       aiKategori: aiResult?.kategori || aiResult?.category || null,
       aiSaranUpcycle: aiResult?.saran_upcycle || aiResult?.suggestions || []

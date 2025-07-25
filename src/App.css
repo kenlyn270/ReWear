@@ -974,3 +974,598 @@ main {
     gap: 1.5rem;
   }
 }
+
+/* Tambahkan di akhir file App.css */
+
+.dashboard-container {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--color-background);
+  font-family: var(--font-serif);
+}
+
+.dashboard-sidebar {
+  width: 250px;
+  background-color: var(--color-white);
+  border-right: 1px solid #e7e5e4;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.dashboard-sidebar .logo {
+  color: var(--color-primary);
+  margin-bottom: 3rem;
+}
+
+.button-logout {
+  margin-top: auto;
+  width: 100%;
+  background-color: transparent;
+  color: var(--color-text-light);
+  font-weight: bold;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid #d6d3d1;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.button-logout:hover {
+  background-color: var(--color-primary);
+  color: var(--color-white);
+  border-color: var(--color-primary);
+}
+
+
+.dashboard-main {
+  flex: 1;
+  padding: 2rem 3rem;
+  overflow-y: auto;
+}
+
+.dashboard-header {
+  margin-bottom: 2.5rem;
+}
+.dashboard-header h2 {
+  font-size: 2.25rem;
+  font-weight: bold;
+  color: var(--color-text);
+}
+.dashboard-header p {
+  color: var(--color-text-light);
+  margin-top: 0.25rem;
+}
+
+/* Statistik */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+}
+
+.stat-card {
+  background-color: var(--color-white);
+  padding: 1.5rem;
+  border-radius: 0.75rem;
+  box-shadow: var(--shadow-md);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.stat-card-icon {
+  background-color: #fde68a20;
+  color: var(--color-primary);
+  padding: 0.75rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.stat-card-info p {
+  font-size: 0.875rem;
+  color: var(--color-text-light);
+}
+.stat-card-info h3 {
+  font-size: 1.75rem;
+  font-weight: bold;
+  color: var(--color-text);
+}
+
+/* Tabel */
+.table-section {
+  margin-top: 3rem;
+}
+.table-section h3 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+.table-wrapper {
+  background-color: var(--color-white);
+  border-radius: 0.75rem;
+  box-shadow: var(--shadow-md);
+  overflow-x: auto;
+}
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.data-table th, .data-table td {
+  padding: 1rem 1.25rem;
+  text-align: left;
+  border-bottom: 1px solid #e7e5e4;
+}
+.data-table th {
+  font-weight: 600;
+  color: var(--color-text-light);
+  font-size: 0.875rem;
+  text-transform: uppercase;
+}
+
+.status-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: bold;
+  text-transform: capitalize;
+}
+.status-pending { background-color: #fef3c7; color: #92400e; }
+.status-approved { background-color: #d1fae5; color: #065f46; }
+.status-rejected { background-color: #fee2e2; color: #991b1b; }
+.status-completed { background-color: #e0e7ff; color: #3730a3; }
+
+.action-cell {
+  display: flex;
+  gap: 0.5rem;
+}
+.action-button {
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.action-button:hover { opacity: 0.8; }
+.approve { background-color: #d1fae5; color: #065f46; }
+.reject { background-color: #fee2e2; color: #991b1b; }
+.points { background-color: var(--color-primary); color: white; display: flex; align-items: center; gap: 0.25rem; }
+
+.points-awarded {
+  font-size: 0.875rem;
+  color: var(--color-text-light);
+  font-style: italic;
+}
+
+.dashboard-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-size: 1.5rem;
+  color: var(--color-text-light);
+}
+
+/* Tambahkan di akhir file App.css */
+/* Hapus semua style dashboard lama jika ada */
+
+:root {
+  /* Definisikan palet warna coklat baru */
+  --color-brand-brown: #8d6e63; /* Coklat utama */
+  --color-brand-brown-dark: #5d4037;
+  --color-brand-brown-light: #efebe9; /* Coklat sangat muda untuk latar */
+  --color-brand-brown-text: #4e342e;
+}
+
+.dashboard-container {
+  display: flex;
+  min-height: 100vh;
+  font-family: var(--font-serif);
+  background-color: var(--color-brand-brown-light); /* Latar belakang coklat muda */
+}
+
+/* --- Sidebar --- */
+.dashboard-sidebar {
+  width: 260px;
+  background-color: var(--color-white);
+  border-right: 1px solid #d7ccc8;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  background-image: url('https://www.transparenttextures.com/patterns/light-paper-fibers.png'); /* Tekstur kertas halus */
+}
+
+.sidebar-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.sidebar-header .logo {
+  color: var(--color-brand-brown-dark);
+}
+
+.sidebar-subtitle {
+  font-size: 0.8rem;
+  color: #a1887f;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.nav-button {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.85rem 1rem;
+  border: none;
+  background-color: transparent;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-brand-brown-text);
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s ease-in-out;
+}
+
+.nav-button:hover {
+  background-color: var(--color-brand-brown-light);
+  color: var(--color-brand-brown-dark);
+}
+
+.nav-button.active {
+  background-color: var(--color-brand-brown);
+  color: white;
+  box-shadow: 0 4px 10px -2px rgba(141, 110, 99, 0.5);
+}
+
+.button-logout {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.85rem 1rem;
+  border: 1px solid #d7ccc8;
+  background-color: transparent;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-brand-brown-text);
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.button-logout:hover {
+  background-color: var(--color-brand-brown-dark);
+  color: white;
+  border-color: var(--color-brand-brown-dark);
+}
+
+/* --- Main Content --- */
+.dashboard-main {
+  flex: 1;
+  padding: 2.5rem 3.5rem;
+  overflow-y: auto;
+}
+
+.dashboard-header {
+  margin-bottom: 2.5rem;
+  border-bottom: 1px solid #d7ccc8;
+  padding-bottom: 1.5rem;
+}
+.dashboard-header h2 {
+  font-size: 2.25rem;
+  font-weight: bold;
+  color: var(--color-brand-brown-dark);
+}
+.dashboard-header p {
+  color: #a1887f;
+  margin-top: 0.25rem;
+}
+
+/* Statistik */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.5rem;
+}
+
+.stat-card {
+  background-color: var(--color-white);
+  padding: 1.5rem;
+  border-radius: 0.75rem;
+  border: 1px solid #d7ccc8;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  transition: all 0.2s ease-in-out;
+}
+.stat-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px -5px rgba(141, 110, 99, 0.2);
+}
+.stat-card-icon {
+  background-color: var(--color-brand-brown-light);
+  color: var(--color-brand-brown);
+  padding: 1rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.stat-card-info p {
+  font-size: 0.875rem;
+  color: #a1887f;
+}
+.stat-card-info h3 {
+  font-size: 1.75rem;
+  font-weight: bold;
+  color: var(--color-brand-brown-dark);
+}
+
+/* Tabel */
+.table-section {
+  margin-top: 3rem;
+}
+.table-wrapper {
+  background-color: var(--color-white);
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 20px -5px rgba(141, 110, 99, 0.1);
+  overflow-x: auto;
+}
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.data-table th, .data-table td {
+  padding: 1rem 1.25rem;
+  text-align: left;
+  border-bottom: 1px solid var(--color-brand-brown-light);
+}
+.data-table th {
+  font-weight: 600;
+  color: #a1887f;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.data-table tr:last-child td {
+  border-bottom: none;
+}
+.data-table tr:hover {
+  background-color: #f5f5f5;
+}
+
+/* Styles lainnya tetap sama */
+.status-badge { padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: bold; text-transform: capitalize; }
+.status-pending { background-color: #ffecb3; color: #6d4c41; }
+.status-approved { background-color: #c8e6c9; color: #2e7d32; }
+.status-rejected { background-color: #ffcdd2; color: #c62828; }
+.status-completed { background-color: #d1c4e9; color: #4527a0; }
+.action-cell { display: flex; gap: 0.5rem; }
+.action-button { border: none; padding: 0.5rem 1rem; border-radius: 0.5rem; font-weight: 600; cursor: pointer; transition: opacity 0.2s; }
+.action-button:hover { opacity: 0.8; }
+.approve { background-color: #a5d6a7; color: #1b5e20; }
+.reject { background-color: #ef9a9a; color: #b71c1c; }
+.points { background-color: var(--color-brand-brown); color: white; display: flex; align-items: center; gap: 0.25rem; }
+.points-awarded { font-size: 0.875rem; color: #a1887f; font-style: italic; }
+.dashboard-loading { display: flex; justify-content: center; align-items: center; height: 100vh; font-size: 1.5rem; color: #a1887f; }
+
+/* Tambahkan di akhir file App.css */
+/* Hapus semua style dashboard lama jika ada */
+
+:root {
+  /* Definisikan palet warna coklat baru */
+  --color-brand-brown: #8d6e63; /* Coklat utama */
+  --color-brand-brown-dark: #5d4037;
+  --color-brand-brown-light: #efebe9; /* Coklat sangat muda untuk latar */
+  --color-brand-brown-text: #4e342e;
+}
+
+.dashboard-container {
+  display: flex;
+  min-height: 100vh;
+  font-family: var(--font-serif);
+  background-color: var(--color-brand-brown-light); /* Latar belakang coklat muda */
+}
+
+/* --- Sidebar --- */
+.dashboard-sidebar {
+  width: 260px;
+  background-color: var(--color-white);
+  border-right: 1px solid #d7ccc8;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  background-image: url('https://www.transparenttextures.com/patterns/light-paper-fibers.png'); /* Tekstur kertas halus */
+}
+
+.sidebar-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.sidebar-header .logo {
+  color: var(--color-brand-brown-dark);
+}
+
+.sidebar-subtitle {
+  font-size: 0.8rem;
+  color: #a1887f;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.nav-button {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.85rem 1rem;
+  border: none;
+  background-color: transparent;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-brand-brown-text);
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s ease-in-out;
+}
+
+.nav-button:hover {
+  background-color: var(--color-brand-brown-light);
+  color: var(--color-brand-brown-dark);
+}
+
+.nav-button.active {
+  background-color: var(--color-brand-brown);
+  color: white;
+  box-shadow: 0 4px 10px -2px rgba(141, 110, 99, 0.5);
+}
+
+.button-logout {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.85rem 1rem;
+  border: 1px solid #d7ccc8;
+  background-color: transparent;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-brand-brown-text);
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.button-logout:hover {
+  background-color: var(--color-brand-brown-dark);
+  color: white;
+  border-color: var(--color-brand-brown-dark);
+}
+
+/* --- Main Content --- */
+.dashboard-main {
+  flex: 1;
+  padding: 2.5rem 3.5rem;
+  overflow-y: auto;
+}
+
+.dashboard-header {
+  margin-bottom: 2.5rem;
+  border-bottom: 1px solid #d7ccc8;
+  padding-bottom: 1.5rem;
+}
+.dashboard-header h2 {
+  font-size: 2.25rem;
+  font-weight: bold;
+  color: var(--color-brand-brown-dark);
+}
+.dashboard-header p {
+  color: #a1887f;
+  margin-top: 0.25rem;
+}
+
+/* Statistik */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.5rem;
+}
+
+.stat-card {
+  background-color: var(--color-white);
+  padding: 1.5rem;
+  border-radius: 0.75rem;
+  border: 1px solid #d7ccc8;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  transition: all 0.2s ease-in-out;
+}
+.stat-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px -5px rgba(141, 110, 99, 0.2);
+}
+.stat-card-icon {
+  background-color: var(--color-brand-brown-light);
+  color: var(--color-brand-brown);
+  padding: 1rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.stat-card-info p {
+  font-size: 0.875rem;
+  color: #a1887f;
+}
+.stat-card-info h3 {
+  font-size: 1.75rem;
+  font-weight: bold;
+  color: var(--color-brand-brown-dark);
+}
+
+/* Tabel */
+.table-section {
+  margin-top: 3rem;
+}
+.table-wrapper {
+  background-color: var(--color-white);
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 20px -5px rgba(141, 110, 99, 0.1);
+  overflow-x: auto;
+}
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.data-table th, .data-table td {
+  padding: 1rem 1.25rem;
+  text-align: left;
+  border-bottom: 1px solid var(--color-brand-brown-light);
+}
+.data-table th {
+  font-weight: 600;
+  color: #a1887f;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.data-table tr:last-child td {
+  border-bottom: none;
+}
+.data-table tr:hover {
+  background-color: #f5f5f5;
+}
+
+/* Styles lainnya tetap sama */
+.status-badge { padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: bold; text-transform: capitalize; }
+.status-pending { background-color: #ffecb3; color: #6d4c41; }
+.status-approved { background-color: #c8e6c9; color: #2e7d32; }
+.status-rejected { background-color: #ffcdd2; color: #c62828; }
+.status-completed { background-color: #d1c4e9; color: #4527a0; }
+.action-cell { display: flex; gap: 0.5rem; }
+.action-button { border: none; padding: 0.5rem 1rem; border-radius: 0.5rem; font-weight: 600; cursor: pointer; transition: opacity 0.2s; }
+.action-button:hover { opacity: 0.8; }
+.approve { background-color: #a5d6a7; color: #1b5e20; }
+.reject { background-color: #ef9a9a; color: #b71c1c; }
+.points { background-color: var(--color-brand-brown); color: white; display: flex; align-items: center; gap: 0.25rem; }
+.points-awarded { font-size: 0.875rem; color: #a1887f; font-style: italic; }
+.dashboard-loading { display: flex; justify-content: center; align-items: center; height: 100vh; font-size: 1.5rem; color: #a1887f; }

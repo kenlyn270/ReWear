@@ -7,17 +7,26 @@ import CustomerHomePage from './CustomerHomePage';
 import LoginPage from './LoginPage';
 import RegisterPage from './RegisterPage';
 import './App.css';
+import AdminDashboardPage from './AdminDashboardPage';
 
-// Ganti nama komponen Dashboard menjadi lebih spesifik
-function AdminDashboardPage() {
-  return (
-    <div>
-      <h1>Selamat Datang di Dashboard Admin!</h1>
-      <p>Ini adalah halaman khusus admin perusahaan.</p>
-    </div>
-  );
-}
+// // Ganti nama komponen Dashboard menjadi lebih spesifik
+// function AdminDashboardPage() {
+//   return (
+//     <div>
+//       <h1>Selamat Datang di Dashboard Admin!</h1>
+//       <p>Ini adalah halaman khusus admin perusahaan.</p>
+//     </div>
+//   );
+// }
 
+<Route 
+  path="/admin/dashboard" 
+  element={
+    <ProtectedRoute>
+      <AdminDashboardPage />
+    </ProtectedRoute>
+  } 
+/>
 
 export default function App() {
   return (
