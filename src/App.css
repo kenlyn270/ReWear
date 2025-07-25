@@ -159,6 +159,7 @@ main {
   display: inline-flex;
   align-items: center;
   gap: 0.75rem;
+  justify-content: center;
 }
 
 .cta-button:hover {
@@ -618,4 +619,176 @@ main {
   main { padding: 1.5rem 4rem; }
   .header-nav { padding: 1rem 4rem; }
   .product-grid { grid-template-columns: repeat(4, 1fr); }
+}
+
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: var(--color-background);
+  padding: 2rem;
+}
+
+.auth-card {
+  background-color: var(--color-white);
+  padding: 2.5rem;
+  border-radius: 1rem;
+  box-shadow: var(--shadow-lg);
+  width: 100%;
+  max-width: 420px;
+  text-align: center;
+}
+
+.auth-card h2 {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-top: 1rem;
+}
+
+.auth-subtitle {
+  color: var(--color-text-light);
+  margin-bottom: 2rem;
+}
+
+.error-message-ui {
+  color: #DC2626; 
+  background-color: #FEE2E2;
+  border: 1px solid #FCA5A5;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  text-align: center;
+  margin-bottom: 1rem;
+  font-size: 0.875rem;
+}
+
+.auth-switch {
+  margin-top: 1.5rem;
+  font-size: 0.875rem;
+  color: var(--color-text-light);
+}
+
+.auth-switch a {
+  color: var(--color-primary);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.auth-switch a:hover {
+  text-decoration: underline;
+}
+
+/* Tambahkan di akhir file App.css */
+
+.landing-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  text-align: center;
+  padding: 2rem;
+
+  /* --- Ganti dengan link batik pilihanmu --- */
+  background-image: linear-gradient(rgba(40, 26, 13, 0.6), rgba(40, 26, 13, 0.6)), url('https://i.imgur.com/TfLVhJr.jpeg');
+  background-size: cover; 
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.landing-content {
+  max-width: 600px;
+}
+
+.landing-content .logo {
+  font-size: 3.5rem;
+  color: var(--color-white); /* Ubah warna logo jadi putih */
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7); /* Tambah bayangan agar menonjol */
+}
+
+.landing-subtitle {
+  font-size: 1.125rem;
+  color: var(--color-dark-text); /* Ubah warna subtitle jadi putih pudar */
+  margin-top: 1rem;
+  margin-bottom: 3rem;
+  line-height: 1.6;
+  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8); /* Tambah bayangan tipis */
+}
+
+.landing-actions {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+}
+
+.landing-button {
+  text-decoration: none;
+  width: 160px; /* Lebar tombol dibuat sama */
+}
+
+/* Kita buat style baru untuk tombol sekunder */
+.button-secondary {
+  width: 100%;
+  background-color: transparent;
+  color: var(--color-primary);
+  font-weight: bold;
+  padding: 1rem 1.5rem;
+  border-radius: 0.5rem;
+  border: 2px solid var(--color-primary);
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 1rem;
+}
+
+.button-secondary:hover {
+  background-color: var(--color-primary);
+  color: var(--color-white);
+}
+
+/* Tambahkan di akhir file App.css */
+
+.landing-actions-hero {
+  display: flex;
+  flex-direction: column; /* Tombol disusun vertikal di layar kecil */
+  align-items: center;
+  gap: 1rem;
+  margin-top: 2.5rem;
+}
+
+/* Style untuk Tombol Login (menggunakan style .cta-button yang sudah ada) */
+.landing-actions-hero .cta-button {
+  width: 220px;
+  text-decoration: none;
+  justify-content: center; /* Memastikan teks di tengah */
+}
+
+/* Style untuk Tombol Register (tombol transparan) */
+.cta-button-secondary {
+  width: 220px;
+  padding: 1rem 2rem;
+  border: 2px solid var(--color-white);
+  color: var(--color-white);
+  background-color: transparent;
+  border-radius: 9999px;
+  font-weight: bold;
+  font-size: 1.125rem;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cta-button-secondary:hover {
+  background-color: var(--color-white);
+  color: var(--color-primary);
+  transform: scale(1.05);
+}
+
+/* Penyesuaian untuk layar lebih besar (desktop) */
+@media (min-width: 768px) {
+  .landing-actions-hero {
+    flex-direction: row; /* Tombol jadi bersebelahan di layar besar */
+    gap: 1.5rem;
+  }
 }
