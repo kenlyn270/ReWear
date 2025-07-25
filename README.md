@@ -16,6 +16,8 @@ ReWear offers two different views: one for **customers** and one for **admins**.
 
 AI is used to check if submitted clothes meet the company's recycle criteria. If an item doesn’t qualify, the AI suggests creative ways to reuse it.
 
+This system is built with features fully delivered in Bahasa Indonesia, aligning with our primary target audience: local fashion businesses and organizations based in Indonesia.
+
 ---
 
 ## Why Choose ReWear?
