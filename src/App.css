@@ -300,36 +300,14 @@ main {
   right: 1rem;
   background: none;
   border: none;
+  font-size: 1.5rem;
+  line-height: 1;
   color: var(--color-text-light);
   cursor: pointer;
 }
 
-.modal-success-view {
-  text-align: center;
-  padding: 3rem 0;
-}
-.modal-success-view h2 { font-size: 2rem; font-weight: bold; margin-top: 1.5rem; }
-.modal-success-view p { color: var(--color-text-light); margin-top: 0.5rem; }
-.modal-success-view .button-primary { margin-top: 2rem; }
-.success-icon { margin: 0 auto; color: var(--color-primary); }
-
 .modal-content h2 { font-size: 2rem; font-weight: bold; }
 .modal-subtitle { color: var(--color-text-light); margin-top: 0.25rem; }
-
-.info-box {
-  margin-top: 1.5rem;
-  padding: 1rem;
-  background-color: rgba(210, 180, 140, 0.3); /* amber-100/50 */
-  border: 1px solid #FDE68A; /* amber-200 */
-  border-radius: 0.5rem;
-  display: flex;
-  align-items: flex-start;
-  gap: 0.75rem;
-}
-.info-box h4 { font-weight: bold; color: var(--color-primary); }
-.info-box ul { list-style-position: inside; list-style-type: disc; margin-top: 0.5rem; font-size: 0.875rem; color: var(--color-primary); padding-left: 0; }
-.info-box li { margin-bottom: 0.25rem; }
-.info-icon { color: var(--color-primary); margin-top: 0.25rem; flex-shrink: 0; }
 
 .modal-form { margin-top: 1.5rem; display: flex; flex-direction: column; gap: 1rem; }
 .form-group label { font-weight: 600; color: var(--color-text); display: block; margin-bottom: 0.25rem; }
@@ -341,6 +319,8 @@ main {
   transition: all 0.2s;
   background-color: var(--color-white);
   box-sizing: border-box;
+  font-family: var(--font-serif);
+  font-size: 1rem;
 }
 .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
   outline: none;
@@ -407,6 +387,32 @@ main {
 .ai-checker-section h2 { font-size: 2rem; font-weight: bold; color: var(--color-text); }
 .ai-checker-section p { color: var(--color-text-light); margin-top: 0.5rem; }
 
+/* PERUBAHAN CSS UNTUK TAMPILAN AI-CHECKER DI DALAM MODAL */
+.modal-form .ai-checker-section {
+  margin: 1.5rem 0;
+  padding: 1rem;
+  background-color: #F5F5F4;
+  border-radius: 0.75rem;
+  box-shadow: none;
+  max-width: 100%;
+  border: 1px solid #E7E5E4;
+}
+
+.modal-form .ai-checker-section h2 {
+  font-size: 1.25rem; /* Font dikecilkan */
+  margin-bottom: 0.25rem;
+}
+
+.modal-form .ai-checker-section p {
+  font-size: 0.9rem; /* Font dikecilkan */
+  margin-top: 0;
+}
+
+.modal-form .upload-placeholder p {
+  font-size: 0.9rem; /* Font 'Unggah foto' dikecilkan */
+}
+/* AKHIR PERUBAHAN CSS */
+
 .ai-checker-box {
   margin-top: 2rem;
   display: flex;
@@ -435,11 +441,11 @@ main {
 .check-button { width: auto; padding: 0.75rem 2rem; }
 .error-message { color: #DC2626; margin-top: 1rem; }
 
-.ai-result { 
-  margin-top: 1.5rem; 
-  padding: 1.5rem; 
-  border-radius: 0.5rem; 
-  text-align: left;
+.ai-result {
+  margin-top: 1.5rem;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  text-align: center;
   width: 100%;
   max-width: 500px;
 }
@@ -490,11 +496,12 @@ main {
     border-radius: 0.5rem;
     box-shadow: var(--shadow-lg);
     z-index: 100;
-    animation: fadeInOut 3s forwards;
+    animation: fadeInOut 3s forwards ease-in-out;
 }
 @keyframes fadeInOut {
-    0%, 100% { opacity: 0; transform: translate(-50%, -20px); }
+    0% { opacity: 0; transform: translate(-50%, -20px); }
     10%, 90% { opacity: 1; transform: translate(-50%, 0); }
+    100% { opacity: 0; transform: translate(-50%, -20px); }
 }
 
 .cart-overlay {
@@ -544,12 +551,11 @@ main {
     margin-bottom: 1.5rem;
 }
 
-/* --- REVISI CSS UNTUK CHECKBOX --- */
 .cart-item-checkbox {
     width: 20px;
     height: 20px;
     cursor: pointer;
-    accent-color: var(--color-primary); /* Memberi warna pada checkbox saat dicentang */
+    accent-color: var(--color-primary);
 }
 
 .cart-item-image {
@@ -563,7 +569,6 @@ main {
 .cart-item-info p { font-size: 0.875rem; color: var(--color-text-light); margin: 0.25rem 0 0.5rem 0; }
 .cart-item-remove { background: none; border: none; color: var(--color-text-light); cursor: pointer; }
 
-/* --- REVISI CSS UNTUK PENYESUAI JUMLAH BARANG --- */
 .quantity-adjuster {
     display: flex;
     align-items: center;
@@ -614,4 +619,3 @@ main {
   .header-nav { padding: 1rem 4rem; }
   .product-grid { grid-template-columns: repeat(4, 1fr); }
 }
-
