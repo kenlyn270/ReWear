@@ -51,7 +51,7 @@ Follow these steps to set up ReWear on your local machine:
 
 ### 2. Clone the Repository
 ```bash
-git clone https://github.com/kenlyn270/ReWear
+git clone https://github.com/kenlyn270/ReWear.git
 cd [PROJECT_FOLDER_NAME]
 ```
 
