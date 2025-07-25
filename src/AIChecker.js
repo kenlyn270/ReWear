@@ -10,7 +10,7 @@ const IconLoader = () => (
 );
 
 // --- Komponen Utama AI Checker ---
-export default function AIChecker() {
+export default function AIChecker({ onCheckComplete }) { // TAMBAHKAN PROP INI
   const [image, setImage] = useState(null);
   const [imageBase64, setImageBase64] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -23,6 +23,11 @@ export default function AIChecker() {
     if (file) {
       setAiResponse(null); // Reset response sebelumnya
       setError(null);
+      // PENTING: Reset hasil AI di parent juga
+      if (onCheckComplete) {
+        onCheckComplete(null);
+      }
+      
       const reader = new FileReader();
       reader.onloadend = () => {
         setImage(reader.result); // Untuk preview di layar
@@ -43,6 +48,11 @@ export default function AIChecker() {
     setIsLoading(true);
     setError(null);
     setAiResponse(null);
+    
+    // Reset hasil di parent juga
+    if (onCheckComplete) {
+      onCheckComplete(null);
+    }
 
     // PENTING: Ganti dengan API Key kamu sendiri dari Google AI Studio
     const apiKey = "AIzaSyAO8MAq9ET_RjiSpO4kc0lh0evPjd4mgKU"; // GANTI DENGAN API KEY-MU
@@ -126,7 +136,25 @@ export default function AIChecker() {
       const responseText = result.candidates[0].content.parts[0].text;
       const cleanedText = responseText.replace(/```json/g, '').replace(/```/g, '').trim();
       const parsedResponse = JSON.parse(cleanedText);
+      
       setAiResponse(parsedResponse);
+      
+      // PENTING: KIRIM HASIL KE PARENT COMPONENT
+      if (onCheckComplete) {
+        // Format data sesuai dengan yang diexpect di SubmissionModal
+        const resultForParent = {
+          status: parsedResponse.status.toLowerCase() === 'diterima' ? 'diterima' : 'ditolak',
+          kategori: parsedResponse.kategori || '',
+          saran_upcycle: parsedResponse.saran_upcycle || [],
+          // Tambahan properties untuk kompatibilitas
+          valid: parsedResponse.status.toLowerCase() === 'diterima',
+          success: parsedResponse.status.toLowerCase() === 'diterima',
+          accepted: parsedResponse.status.toLowerCase() === 'diterima'
+        };
+        
+        console.log("MENGIRIM HASIL AI KE PARENT:", resultForParent);
+        onCheckComplete(resultForParent);
+      }
 
     } catch (err) {
       console.error("Error:", err);
@@ -179,7 +207,7 @@ export default function AIChecker() {
               </div>
             ) : (
               <div className="result-rejected">
-                <h3>Sayang Sekali, Pakaian Ditolak</h3>
+                <h3>Sayang Sekali, Pakaian Ditolak🙏🏻</h3>
                 <p>Setelah dianalisis, pakaian ini sepertinya memiliki kerusakan yang cukup parah sehingga tidak dapat kami terima untuk program daur ulang.</p>
                 <h4>Tapi jangan dibuang!</h4>
                 <p>Ini adalah sebuah <strong>{aiResponse.kategori}</strong>. Kamu bisa memanfaatkannya kembali menjadi:</p>
