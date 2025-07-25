@@ -1,21 +1,18 @@
-/* src/App.css */
-
-/* --- Global Styles & Fonts --- */
 @import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&display=swap');
 
 :root {
   --font-serif: 'Lora', serif;
-  --color-background: #F5F5F4; /* stone-100 */
-  --color-text: #292524; /* stone-800 */
-  --color-text-light: #78716C; /* stone-500 */
-  --color-primary: #78350F; /* amber-900 */
-  --color-primary-dark: #451A03; /* amber-950 */
-  --color-primary-light: #FDE68A; /* amber-200 */
+  --color-background: #F5F5F4;
+  --color-text: #292524; 
+  --color-text-light: #78716C; 
+  --color-primary: #78350F; 
+  --color-primary-dark: #451A03; 
+  --color-primary-light: #FDE68A; 
   --color-white: #FFFFFF;
-  --color-dark-bg: #292524; /* stone-800 */
-  --color-dark-bg-light: #1C1917; /* stone-900 */
-  --color-dark-text: #E7E5E4; /* stone-200 */
-  --color-dark-text-light: #A8A29E; /* stone-400 */
+  --color-dark-bg: #292524; 
+  --color-dark-bg-light: #1C1917; 
+  --color-dark-text: #E7E5E4; 
+  --color-dark-text-light: #A8A29E; 
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
 }
@@ -41,7 +38,6 @@ main {
   text-shadow: 1px 1px 8px rgba(0, 0, 0, 0.7);
 }
 
-/* --- Header --- */
 .app-header {
   background-color: rgba(255, 255, 255, 0.8);
   backdrop-filter: blur(4px);
@@ -67,7 +63,7 @@ main {
 }
 
 .nav-links {
-  display: none; /* Hidden on mobile */
+  display: none; 
   align-items: center;
   gap: 2rem;
 }
@@ -97,7 +93,6 @@ main {
   cursor: pointer;
 }
 
-/* --- Hero Section --- */
 .hero-section {
   position: relative;
   height: 60vh;
@@ -163,11 +158,10 @@ main {
 }
 
 .cta-button:hover {
-  background-color: #F5F5F4; /* stone-100 */
+  background-color: #F5F5F4;
   transform: scale(1.05);
 }
 
-/* --- Catalog Section --- */
 .catalog-section {
   margin-top: 4rem;
   text-align: center;
@@ -259,7 +253,6 @@ main {
   background-color: var(--color-primary-dark);
 }
 
-/* --- Skeleton Loader --- */
 .skeleton {
   animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
@@ -271,7 +264,6 @@ main {
 .skeleton-text-p { height: 1rem; background-color: #E7E5E4; border-radius: 0.25rem; width: 50%; }
 .skeleton-button { height: 2.5rem; background-color: #E7E5E4; border-radius: 0.5rem; margin-top: 1rem; }
 
-/* --- Modal --- */
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -284,7 +276,7 @@ main {
 }
 
 .modal-content {
-  background-color: #FAFAF9; /* stone-50 */
+  background-color: #FAFAF9; 
   border-radius: 1rem;
   box-shadow: var(--shadow-lg);
   width: 100%;
@@ -315,7 +307,7 @@ main {
 .form-group input, .form-group textarea, .form-group select {
   width: 100%;
   padding: 0.75rem;
-  border: 1px solid #D6D3D1; /* stone-300 */
+  border: 1px solid #D6D3D1;
   border-radius: 0.5rem;
   transition: all 0.2s;
   background-color: var(--color-white);
@@ -344,7 +336,6 @@ main {
 .button-primary:hover { background-color: var(--color-primary-dark); }
 .button-primary:disabled { background-color: #A8A29E; cursor: not-allowed; }
 
-/* --- Footer --- */
 .app-footer {
   background-color: var(--color-dark-bg);
   color: var(--color-dark-text);
@@ -375,7 +366,6 @@ main {
 }
 .footer-bottom p { color: var(--color-text-light); font-size: 0.875rem; }
 
-/* --- AI Checker Section Styles --- */
 .ai-checker-section {
   text-align: center;
   margin: 4rem auto;
@@ -388,7 +378,6 @@ main {
 .ai-checker-section h2 { font-size: 2rem; font-weight: bold; color: var(--color-text); }
 .ai-checker-section p { color: var(--color-text-light); margin-top: 0.5rem; }
 
-/* PERUBAHAN CSS UNTUK TAMPILAN AI-CHECKER DI DALAM MODAL */
 .modal-form .ai-checker-section {
   margin: 1.5rem 0;
   padding: 1rem;
@@ -400,19 +389,18 @@ main {
 }
 
 .modal-form .ai-checker-section h2 {
-  font-size: 1.25rem; /* Font dikecilkan */
+  font-size: 1.25rem;
   margin-bottom: 0.25rem;
 }
 
 .modal-form .ai-checker-section p {
-  font-size: 0.9rem; /* Font dikecilkan */
+  font-size: 0.9rem;
   margin-top: 0;
 }
 
 .modal-form .upload-placeholder p {
-  font-size: 0.9rem; /* Font 'Unggah foto' dikecilkan */
+  font-size: 0.9rem;
 }
-/* AKHIR PERUBAHAN CSS */
 
 .ai-checker-box {
   margin-top: 2rem;
@@ -462,7 +450,6 @@ main {
 @keyframes rotate { 100% { transform: rotate(360deg); } }
 @keyframes dash { 0% { stroke-dasharray: 1, 150; stroke-dashoffset: 0; } 50% { stroke-dasharray: 90, 150; stroke-dashoffset: -35; } 100% { stroke-dasharray: 90, 150; stroke-dashoffset: -124; } }
 
-/* --- STYLE BARU UNTUK KERANJANG & NOTIFIKASI --- */
 .cart-button {
     position: relative;
     background: none;
@@ -574,7 +561,7 @@ main {
 .quantity-adjuster {
     display: flex;
     align-items: center;
-    border: 1px solid #D6D3D1; /* stone-300 */
+    border: 1px solid #D6D3D1;
     border-radius: 0.5rem;
     width: fit-content;
 }
@@ -605,7 +592,6 @@ main {
     margin-bottom: 1rem;
 }
 
-/* --- Responsive Design --- */
 @media (min-width: 768px) {
   main { padding: 1.5rem 2rem; }
   .header-nav { padding: 1rem 2rem; }
@@ -679,15 +665,12 @@ main {
   text-decoration: underline;
 }
 
-/* Tambahkan di akhir file App.css */
-
 .landing-container {
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
 
-  /* --- Ganti dengan link batik pilihanmu --- */
   background-image: linear-gradient(rgba(40, 26, 13, 0.6), rgba(40, 26, 13, 0.6)), url('https://i.imgur.com/TfLVhJr.jpeg');
   background-size: cover; 
   background-position: center;
@@ -849,7 +832,7 @@ main {
   cursor: pointer;
   font-size: 0.9rem;     
   font-weight: 400;      
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; /* Font lebih modern/tipis */
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   position: relative;
   user-select: none;
 }
@@ -868,11 +851,10 @@ main {
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0; /* Mencegah kotak penyusutan */
+  flex-shrink: 0; 
   transition: all 0.2s;
 }
 
-/* Style untuk centang di dalam checkbox */
 .custom-radio::after {
   content: '';
   width: 4px;
@@ -884,13 +866,11 @@ main {
   transition: opacity 0.2s;
 }
 
-/* Style saat radio button dipilih */
 .delivery-option-label input:checked + .custom-radio {
   background-color: var(--color-primary);
   border-color: var(--color-primary);
 }
 
-/* Tampilkan centang saat radio button dipilih */
 .delivery-option-label input:checked + .custom-radio::after {
   opacity: 1;
 }
@@ -900,9 +880,9 @@ main {
   gap: 1.5rem;
   justify-content: space-around;
   flex-wrap: wrap;
-  margin-top: -2rem; /* Agar sedikit naik ke atas Hero Section */
+  margin-top: -2rem;
   margin-bottom: 4rem;
-  position: relative; /* Diperlukan agar bisa berada di atas elemen lain */
+  position: relative;
   z-index: 10;
 }
 
@@ -994,7 +974,6 @@ main {
   border-color: var(--color-primary);
 }
 
-
 .dashboard-main {
   flex: 1;
   padding: 2rem 3rem;
@@ -1014,7 +993,6 @@ main {
   margin-top: 0.25rem;
 }
 
-/* Statistik */
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -1049,7 +1027,6 @@ main {
   color: var(--color-text);
 }
 
-/* Tabel */
 .table-section {
   margin-top: 3rem;
 }
@@ -1221,7 +1198,6 @@ main {
   border-color: var(--color-brand-brown-dark);
 }
 
-/* --- Main Content --- */
 .dashboard-main {
   flex: 1;
   padding: 2.5rem 3.5rem;
@@ -1243,7 +1219,6 @@ main {
   margin-top: 0.25rem;
 }
 
-/* Statistik */
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -1283,7 +1258,6 @@ main {
   color: var(--color-brand-brown-dark);
 }
 
-/* Tabel */
 .table-section {
   margin-top: 3rem;
 }
@@ -1316,7 +1290,6 @@ main {
   background-color: #f5f5f5;
 }
 
-/* Styles lainnya tetap sama */
 .status-badge { padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: bold; text-transform: capitalize; }
 .status-pending { background-color: #ffecb3; color: #6d4c41; }
 .status-approved { background-color: #c8e6c9; color: #2e7d32; }
@@ -1533,8 +1506,6 @@ main {
 .points-awarded { font-size: 0.875rem; color: #a1887f; font-style: italic; }
 .dashboard-loading { display: flex; justify-content: center; align-items: center; height: 100vh; font-size: 1.5rem; color: #a1887f; }
 
-/* Tambahkan di akhir file App.css */
-
 .user-stats-section {
   text-align: center;
   margin: 4rem auto;
@@ -1562,8 +1533,8 @@ main {
 }
 
 .stat-card-customer {
-  background-color: #D7CCC8; /* Warna dasar coklat muda */
-  color: var(--color-brand-brown-dark, #5d4037); /* Fallback color */
+  background-color: #D7CCC8;
+  color: var(--color-brand-brown-dark, #5d4037);
   padding: 2rem 1.5rem;
   border-radius: 0.75rem;
   border: 1px solid #BCAAA4;
@@ -1596,22 +1567,17 @@ main {
   font-style: italic;
 }
 
-/* --- Admin Dashboard Final Design --- */
-
-/* === Layout Utama & Latar Belakang === */
 .admin-layout {
   display: flex;
   min-height: 100vh;
-  /* Warna latar yang lebih soft dan premium, senada dengan homepage */
   background-color: #FBFBF9; 
   font-family: var(--font-serif);
 }
 
-/* === Sidebar Kiri === */
 .admin-sidebar {
   width: 260px;
-  background-color: #FFFFFF; /* Sidebar putih bersih untuk kontras */
-  border-right: 1px solid #F0EEEC; /* Border yang sangat tipis */
+  background-color: #FFFFFF; 
+  border-right: 1px solid #F0EEEC;
   padding: 2rem 1.5rem;
   display: flex;
   flex-direction: column;
@@ -1638,13 +1604,12 @@ main {
 
 .admin-panel-label {
   font-size: 0.7rem;
-  color: #BDB5AD; /* Warna lebih pudar */
+  color: #BDB5AD;
   letter-spacing: 1.5px;
   font-weight: 600;
   margin-bottom: 2.5rem;
 }
 
-/* Navigasi Sidebar */
 .admin-sidebar-nav {
   display: flex;
   flex-direction: column;
@@ -1744,7 +1709,7 @@ main {
 }
 
 .stat-emoji {
-  font-size: 1.75rem; /* Ukuran emoji disesuaikan */
+  font-size: 1.75rem; 
   width: 52px;
   height: 52px;
   border-radius: 50%;
@@ -1777,8 +1742,6 @@ main {
   margin-left: 0.25rem;
 }
 
-
-/* === Tampilan Tabel Konfirmasi === */
 .table-section {
   margin-top: 3rem;
 }
@@ -1824,7 +1787,6 @@ main {
   color: var(--color-text-light);
 }
 
-/* Badge Status */
 .status-badge {
   padding: 0.25rem 0.75rem;
   border-radius: 9999px;
@@ -1837,7 +1799,6 @@ main {
 .status-completed { background-color: #D1FAE5; color: #065F46; }
 .status-rejected { background-color: #FEE2E2; color: #991B1B; }
 
-/* Tombol Aksi */
 .action-cell {
   display: flex;
   gap: 0.5rem;
@@ -1866,7 +1827,6 @@ main {
   color: var(--color-text-light);
 }
 
-/* Notifikasi Halaman */
 .page-notification {
   position: fixed;
   top: 1.5rem;
@@ -1888,3 +1848,18 @@ main {
 .page-notification.error { background-color: #EF4444; color: white; }
 .notification-close-btn { background: none; border: none; color: white; font-size: 1.25rem; cursor: pointer; }
 
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-img {
+  height: 40px; 
+  width: auto;
+}
+
+.logo-text {
+  font-size: 28px;
+  margin: 0;
+}

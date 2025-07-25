@@ -273,7 +273,10 @@ function Header({ cartItemCount, onCartClick, onLogout }) {
   return (
     <header className="app-header">
       <nav className="header-nav">
-        <h1 className="logo">ReWear</h1>
+        <div className="logo-container">
+          <img src="https://i.imgur.com/3Lw3p9a.png" alt="ReWear Logo" className="logo-img" />
+          <h1 className="logo-text">ReWear</h1>
+        </div>
         <div className="nav-links">
           {navItems.map(item => <a key={item} href="/#">{item}</a>)}
           <a href="/#" className="active">Recycle</a>
