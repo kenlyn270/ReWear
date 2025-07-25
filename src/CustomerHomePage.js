@@ -4,10 +4,9 @@ import AIChecker from './AIChecker'; // <-- Tambahkan import untuk komponen AI
 import { collection, addDoc, serverTimestamp, getDocs } from "firebase/firestore";
 import { db } from "./firebase";
 
-
 // --- Komponen Ikon SVG ---
 const IconShoppingCart = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
   </svg>
 );
@@ -22,8 +21,9 @@ const IconX = () => (
   </svg>
 );
 const IconTrash = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" viewBox="0 0 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
 );
+
 
 // --- Komponen Utama Aplikasi ---
 export default function App() {
@@ -131,9 +131,7 @@ export default function App() {
       <Footer />
       
       {isModalOpen && <SubmissionModal onClose={handleCloseModal} setNotification={setNotification} />}
-
-      {isCartOpen && <ShoppingCart items={cartItems} onClose={toggleCart} onRemove={handleRemoveFromCart} onToggleSelect={handleToggleSelectItem} onUpdateQuantity={handleUpdateQuantity} />}
-      {notification && <Notification message={notification} />}
+      {isCartOpen && <ShoppingCart items={cartItems} onClose={() => setIsCartOpen(false)} setNotification={setNotification} />}      {notification && <Notification message={notification} />}
     </div>
   );
 }
@@ -144,7 +142,7 @@ function Header({ cartItemCount, onCartClick }) {
   return (
     <header className="app-header">
       <nav className="header-nav">
-        <h1 className="logo">EcoStyle</h1>
+        <h1 className="logo">ReWear</h1>
         <div className="nav-links">
           {navItems.map(item => <a key={item} href="/#">{item}</a>)}
           <a href="/#" className="active">Recycle</a>
@@ -227,9 +225,12 @@ function SubmissionModal({ onClose, setNotification }) {
   const [formData, setFormData] = useState({
     fullName: '',
     address: '',
+    noTelp: '',
     itemType: 'Kemeja',
+    itemDescription: '',
+    deliveryOption: 'pickup', // <-- TAMBAHKAN INI. 'pickup' atau 'dropoff'
     itemDescription: ''
-  });
+});
   const [isFormValid, setIsFormValid] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [aiResult, setAiResult] = useState(null);
@@ -287,7 +288,9 @@ function SubmissionModal({ onClose, setNotification }) {
 
     const dataToSave = {
       namaLengkap: formData.fullName,
+      metodePengiriman: formData.deliveryOption, 
       alamatPenjemputan: formData.address,
+      nomorTelepon: formData.noTelp,
       jenisBarang: formData.itemType,
       deskripsiKondisi: formData.itemDescription,
       createdAt: serverTimestamp(),
@@ -325,12 +328,49 @@ function SubmissionModal({ onClose, setNotification }) {
                 value={formData.fullName} onChange={handleInputChange} 
               />
             </div>
+              {/* GUNAKAN KODE BARU INI */}
+              <div className="form-group">
+                <label>Metode Pengiriman</label>
+                <div className="delivery-options-container">
+                  <label className="delivery-option-label">
+                    <input type="radio" name="deliveryOption" value="pickup" checked={formData.deliveryOption === 'pickup'} onChange={handleInputChange} />
+                    <span className="custom-radio"></span>
+                    <span className="delivery-option-text">Jemput Kurir (JNE)</span>
+                  </label>
+                  <label className="delivery-option-label">
+                    <input type="radio" name="deliveryOption" value="dropoff" checked={formData.deliveryOption === 'dropoff'} onChange={handleInputChange} />
+                    <span className="custom-radio"></span>
+                    <span className="delivery-option-text">Drop Off Mandiri</span>
+                  </label>
+                </div>
+              </div>
+
             <div className="form-group">
-              <label htmlFor="address">Alamat Penjemputan</label>
+              {/* Beri label 'Opsional' jika dropoff dipilih */}
+              <label htmlFor="address">
+                Alamat Penjemputan 
+                {formData.deliveryOption === 'dropoff' && <span style={{color: '#999', fontWeight: 'normal'}}> (Opsional)</span>}
+              </label>
               <textarea 
-                id="address" name="address" rows="3" required
-                value={formData.address} onChange={handleInputChange}
+                id="address" 
+                name="address" 
+                rows="3" 
+                // Alamat tidak wajib diisi jika dropoff
+                required={formData.deliveryOption === 'pickup'}
+                value={formData.address} 
+                onChange={handleInputChange}
               ></textarea>
+            </div>
+            <div className="form-group">
+            <label htmlFor="noTelp">Nomor Telepon</label>
+            <input 
+              type="tel" 
+              id="noTelp" 
+              name="noTelp" 
+              required 
+              value={formData.noTelp} 
+              onChange={handleInputChange} 
+            />
             </div>
             <div className="form-group">
               <label htmlFor="itemType">Jenis Barang</label>
@@ -374,7 +414,7 @@ function Footer() {
     <footer className="app-footer">
       <div className="footer-content">
         <div className="footer-column">
-          <h3>EcoStyle</h3>
+          <h3>ReWear</h3>
           <p>Mendukung fashion yang berkelanjutan untuk masa depan bumi yang lebih baik.</p>
         </div>
         <div className="footer-column">
@@ -386,7 +426,7 @@ function Footer() {
         <div className="footer-column">
           <h4>Tentang Kami</h4>
           <ul>
-            <li><a href="/#">Visi & Misi</a></li><li><a href="/#">Program Daur Ulang</a></li><li><a href="/#">Karir</a></li>
+            <li><a href="/#">Visi & Misi</a></li><li><a href="/#">Program Daur Ulang</a></li><li></li>
           </ul>
         </div>
         <div className="footer-column">
@@ -411,7 +451,7 @@ function Notification({ message }) {
   );
 }
 
-function ShoppingCart({ items, onClose, onRemove, onToggleSelect, onUpdateQuantity }) {
+function ShoppingCart({ items, onClose, setNotification, onRemove, onToggleSelect, onUpdateQuantity }) {
     const totalPrice = items
         .filter(item => item.selected)
         .reduce((total, item) => total + (item.price * item.quantity), 0);
@@ -456,8 +496,16 @@ function ShoppingCart({ items, onClose, onRemove, onToggleSelect, onUpdateQuanti
                             <span>Total</span>
                             <span>Rp {totalPrice.toLocaleString('id-ID')}</span>
                         </div>
-                        <button className="button-primary">Checkout</button>
-                    </div>
+                          <button 
+                            className="button-primary" 
+                            onClick={() => {
+                              setNotification('Fitur terintegrasi dengan aplikasi utama perusahaan! ✨');
+                              onClose(); 
+                            }}
+                          >
+                            Checkout
+                          </button>                   
+                        </div>
                 )}
             </div>
         </div>
