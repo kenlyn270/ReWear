@@ -1,15 +1,11 @@
-// File: src/AIChecker.js (Versi yang sudah diupdate)
-
 import React, { useState } from 'react';
 
-// --- Komponen Ikon untuk Loading ---
 const IconLoader = () => (
   <svg className="spinner" viewBox="0 0 50 50">
     <circle className="path" cx="25" cy="25" r="20" fill="none" strokeWidth="5"></circle>
   </svg>
 );
 
-// --- Komponen Utama AI Checker ---
 export default function AIChecker({ onCheckComplete }) { // TAMBAHKAN PROP INI
   const [image, setImage] = useState(null);
   const [imageBase64, setImageBase64] = useState(null);
@@ -17,21 +13,18 @@ export default function AIChecker({ onCheckComplete }) { // TAMBAHKAN PROP INI
   const [aiResponse, setAiResponse] = useState(null);
   const [error, setError] = useState(null);
 
-  // Fungsi untuk menangani saat pengguna memilih file gambar
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setAiResponse(null); // Reset response sebelumnya
+      setAiResponse(null); 
       setError(null);
-      // PENTING: Reset hasil AI di parent juga
       if (onCheckComplete) {
         onCheckComplete(null);
       }
       
       const reader = new FileReader();
       reader.onloadend = () => {
-        setImage(reader.result); // Untuk preview di layar
-        // Hapus prefix data URL untuk mendapatkan data base64 murni
+        setImage(reader.result); 
         const base64String = reader.result.replace(/^data:.+;base64,/, '');
         setImageBase64(base64String);
       };
@@ -39,7 +32,6 @@ export default function AIChecker({ onCheckComplete }) { // TAMBAHKAN PROP INI
     }
   };
 
-  // Fungsi untuk mengirim gambar dan prompt ke AI
   const handleCheckCondition = async () => {
     if (!imageBase64) {
       setError("Pilih gambar terlebih dahulu.");
@@ -49,20 +41,15 @@ export default function AIChecker({ onCheckComplete }) { // TAMBAHKAN PROP INI
     setError(null);
     setAiResponse(null);
     
-    // Reset hasil di parent juga
     if (onCheckComplete) {
       onCheckComplete(null);
     }
 
-    // PENTING: Ganti dengan API Key kamu sendiri dari Google AI Studio
-    const apiKey = "AIzaSyAO8MAq9ET_RjiSpO4kc0lh0evPjd4mgKU"; // GANTI DENGAN API KEY-MU
+    const apiKey = "AIzaSyAO8MAq9ET_RjiSpO4kc0lh0evPjd4mgKU"; 
     const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
     try {
-      // --- TAHAP 1: Validasi Gambar ---
-      // Prompt ini bertanya ke AI apakah gambar tersebut adalah pakaian.
       const validationPrompt = `Apakah subjek utama dari gambar ini adalah item pakaian (seperti baju, celana, gaun, jaket)? Jangan analisis kondisinya. Jawab HANYA dengan satu kata: "Ya" atau "Tidak".`;
-
       const validationPayload = {
         contents: [{
           parts: [
@@ -85,15 +72,12 @@ export default function AIChecker({ onCheckComplete }) { // TAMBAHKAN PROP INI
       const validationResult = await validationResponse.json();
       const validationText = validationResult.candidates[0].content.parts[0].text.trim();
 
-      // Jika jawaban AI bukan "Ya", tampilkan error dan hentikan proses.
       if (validationText.toLowerCase() !== 'ya') {
         setError("Gambar tidak valid. Harap unggah foto pakaian yang jelas.");
         setIsLoading(false);
         return;
       }
 
-      // --- TAHAP 2: Jika Valid, Analisis Kondisi Pakaian ---
-      // Prompt ini sama seperti sebelumnya, untuk mengecek kondisi.
       const conditionPrompt = `
         Analisis gambar pakaian ini dengan seksama.
         Tugasmu adalah:
@@ -139,14 +123,11 @@ export default function AIChecker({ onCheckComplete }) { // TAMBAHKAN PROP INI
       
       setAiResponse(parsedResponse);
       
-      // PENTING: KIRIM HASIL KE PARENT COMPONENT
       if (onCheckComplete) {
-        // Format data sesuai dengan yang diexpect di SubmissionModal
         const resultForParent = {
           status: parsedResponse.status.toLowerCase() === 'diterima' ? 'diterima' : 'ditolak',
           kategori: parsedResponse.kategori || '',
           saran_upcycle: parsedResponse.saran_upcycle || [],
-          // Tambahan properties untuk kompatibilitas
           valid: parsedResponse.status.toLowerCase() === 'diterima',
           success: parsedResponse.status.toLowerCase() === 'diterima',
           accepted: parsedResponse.status.toLowerCase() === 'diterima'

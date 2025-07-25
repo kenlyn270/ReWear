@@ -1,15 +1,12 @@
-// src/RegisterPage.js
-
 import React, { useState } from 'react';
-// Import 'serverTimestamp' untuk waktu yang konsisten
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc, serverTimestamp } from "firebase/firestore"; 
 import { Link, useNavigate } from 'react-router-dom';
-import { db } from './firebase'; // <-- Import 'db' dari file firebase.js-mu
+import { db } from './firebase'; 
 import './App.css';
 
 export default function RegisterPage() {
-  const [fullName, setFullName] = useState(''); // <-- State baru untuk Nama Lengkap
+  const [fullName, setFullName] = useState(''); 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [role, setRole] = useState('customer');
@@ -25,25 +22,21 @@ export default function RegisterPage() {
     setError('');
 
     try {
-      // 1. Buat user di Firebase Authentication
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
-
-      // 2. Simpan data tambahan ke Firestore
       await setDoc(doc(db, "users", user.uid), {
         uid: user.uid,
         email: user.email,
-        namaLengkap: fullName, // <-- Simpan Nama Lengkap
+        namaLengkap: fullName, 
         role: role,
-        rewardPoints: 0, // <-- TAMBAHAN: Poin reward di-set ke 0
-        createdAt: serverTimestamp() // <-- Gunakan serverTimestamp untuk waktu yang akurat
+        rewardPoints: 0, 
+        createdAt: serverTimestamp() 
       });
       
-      // 3. Arahkan sesuai role
       if (role === 'admin') {
         navigate('/admin');
       } else {
-        navigate('/'); // Customer ke halaman utama
+        navigate('/'); 
       }
 
     } catch (err) {
@@ -62,7 +55,6 @@ export default function RegisterPage() {
         <p className="auth-subtitle">Daftar untuk mulai mendaur ulang dan berbelanja.</p>
         
         <form onSubmit={handleRegister} className="modal-form">
-          {/* TAMBAHAN: Input untuk Nama Lengkap */}
           <div className="form-group">
             <label htmlFor="fullName">Nama Lengkap</label>
             <input 

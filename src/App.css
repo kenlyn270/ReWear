@@ -696,22 +696,22 @@ main {
 
 .landing-content {
   max-width: 600px;
-  text-align: center; /* Pindahkan ke sini */
-  padding: 2rem;       /* Pindahkan ke sini */}
+  text-align: center; 
+  padding: 2rem;      }
 
 .landing-content .logo {
   font-size: 3.5rem;
-  color: var(--color-white); /* Ubah warna logo jadi putih */
-  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7); /* Tambah bayangan agar menonjol */
+  color: var(--color-white); 
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7); 
 }
 
 .landing-subtitle {
   font-size: 1.125rem;
-  color: var(--color-dark-text); /* Ubah warna subtitle jadi putih pudar */
+  color: var(--color-dark-text); 
   margin-top: 1rem;
   margin-bottom: 3rem;
   line-height: 1.6;
-  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8); /* Tambah bayangan tipis */
+  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8); 
 }
 
 .landing-actions {
@@ -722,10 +722,9 @@ main {
 
 .landing-button {
   text-decoration: none;
-  width: 160px; /* Lebar tombol dibuat sama */
+  width: 160px; 
 }
 
-/* Kita buat style baru untuk tombol sekunder */
 .button-secondary {
   width: 100%;
   background-color: transparent;
@@ -744,24 +743,21 @@ main {
   color: var(--color-white);
 }
 
-/* Tambahkan di akhir file App.css */
 
 .landing-actions-hero {
   display: flex;
-  flex-direction: column; /* Tombol disusun vertikal di layar kecil */
+  flex-direction: column; 
   align-items: baseline;
   gap: 1rem;
   margin-top: 2.5rem;
 }
 
-/* Style untuk Tombol Login (menggunakan style .cta-button yang sudah ada) */
 .landing-actions-hero .cta-button {
   width: 220px;
   text-decoration: none;
-  justify-content: center; /* Memastikan teks di tengah */
+  justify-content: center; 
 }
 
-/* Style untuk Tombol Register (tombol transparan) */
 .cta-button-secondary {
   width: 220px;
   padding: 1rem 2rem;
@@ -785,27 +781,22 @@ main {
   transform: scale(1.05);
 }
 
-/* --- Custom Delivery Option Checklist (Final Version) --- */
-
-/* Wadah untuk semua pilihan */
 .delivery-options-container {
   display: flex;
-  flex-direction: column; /* Menyusun pilihan ke bawah */
-  gap: 0.75rem;          /* PERUBAHAN: Jarak antar pilihan dikecilkan */
+  flex-direction: column; 
+  gap: 0.75rem;         
   margin-top: 0.5rem;
 }
 
-/* Style untuk setiap baris pilihan (label) */
 .delivery-option-label {
-  display: flex !important;         /* Memaksa layout ke samping */
-  flex-direction: row !important;  /* Memaksa arahnya horizontal */
-  align-items: center !important;  /* Memaksa posisi vertikal di tengah */
+  display: flex !important;         
+  flex-direction: row !important;  
+  align-items: center !important;  
   cursor: pointer;
   position: relative;
   user-select: none;
 }
 
-/* Sembunyikan radio button asli (tetap sama) */
 .delivery-option-label input[type="radio"] {
   opacity: 0;
   position: absolute;
@@ -813,7 +804,6 @@ main {
   height: 0;
 }
 
-/* Style untuk kotak checkbox kustom (tetap sama) */
 .custom-radio {
   width: 18px;
   height: 18px;
@@ -826,7 +816,6 @@ main {
   transition: all 0.2s;
 }
 
-/* Style untuk centang di dalam checkbox (tetap sama) */
 .custom-radio::after {
   content: '';
   width: 5px;
@@ -838,52 +827,44 @@ main {
   transition: opacity 0.2s;
 }
 
-/* Style saat radio button dipilih (tetap sama) */
 .delivery-option-label input[type="radio"]:checked + .custom-radio {
   background-color: var(--color-primary);
   border-color: var(--color-primary);
 }
 
-/* Tampilkan centang saat radio button dipilih (tetap sama) */
 .delivery-option-label input[type="radio"]:checked + .custom-radio::after {
   opacity: 1;
 }
 
-/* --- Custom Delivery Option Checklist (Final Version) --- */
-
-/* Wadah untuk semua pilihan */
 .delivery-options-container {
   display: flex;
-  flex-direction: column; /* Pilihan disusun ke bawah */
-  gap: 0.75rem;          /* Jarak antar pilihan */
+  flex-direction: column; 
+  gap: 0.75rem;          
   margin-top: 0.5rem;
 }
 
-/* Style untuk setiap baris pilihan (label) */
 .delivery-option-label {
-  display: flex;         /* PENTING: Membuat checklist & teks bersebelahan */
-  align-items: center;   /* PENTING: Menjaga posisi vertikal tetap di tengah */
+  display: flex;         
+  align-items: center;   
   cursor: pointer;
-  font-size: 0.9rem;     /* Tulisan dikecilkan */
-  font-weight: 400;      /* Tulisan tidak tebal */
+  font-size: 0.9rem;     
+  font-weight: 400;      
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; /* Font lebih modern/tipis */
   position: relative;
   user-select: none;
 }
 
-/* Sembunyikan radio button asli */
 .delivery-option-label input[type="radio"] {
   opacity: 0;
   position: absolute;
 }
 
-/* Style untuk kotak checkbox kustom */
 .custom-radio {
-  width: 16px;           /* PERUBAHAN: Ukuran kotak diperkecil */
-  height: 16px;          /* PERUBAHAN: Ukuran kotak diperkecil */
+  width: 16px;           
+  height: 16px;          
   border: 1.5px solid #b0b0b0;
   border-radius: 4px;
-  margin-right: 0.6rem;  /* Jarak antara kotak dan tulisan */
+  margin-right: 0.6rem;  
   display: flex;
   align-items: center;
   justify-content: center;
@@ -963,19 +944,16 @@ main {
 
 @media (min-width: 768px) {
   .impact-box {
-    flex-basis: auto; /* Kembali normal di layar besar */
+    flex-basis: auto; 
   }
 }
 
-/* Penyesuaian untuk layar lebih besar (desktop) */
 @media (min-width: 768px) {
   .landing-actions-hero {
-    flex-direction: row; /* Tombol jadi bersebelahan di layar besar */
+    flex-direction: row; 
     gap: 1.5rem;
   }
 }
-
-/* Tambahkan di akhir file App.css */
 
 .dashboard-container {
   display: flex;
@@ -1146,14 +1124,10 @@ main {
   color: var(--color-text-light);
 }
 
-/* Tambahkan di akhir file App.css */
-/* Hapus semua style dashboard lama jika ada */
-
 :root {
-  /* Definisikan palet warna coklat baru */
-  --color-brand-brown: #8d6e63; /* Coklat utama */
+  --color-brand-brown: #8d6e63; 
   --color-brand-brown-dark: #5d4037;
-  --color-brand-brown-light: #efebe9; /* Coklat sangat muda untuk latar */
+  --color-brand-brown-light: #efebe9; 
   --color-brand-brown-text: #4e342e;
 }
 
@@ -1161,10 +1135,9 @@ main {
   display: flex;
   min-height: 100vh;
   font-family: var(--font-serif);
-  background-color: var(--color-brand-brown-light); /* Latar belakang coklat muda */
+  background-color: var(--color-brand-brown-light); 
 }
 
-/* --- Sidebar --- */
 .dashboard-sidebar {
   width: 260px;
   background-color: var(--color-white);
@@ -1358,14 +1331,10 @@ main {
 .points-awarded { font-size: 0.875rem; color: #a1887f; font-style: italic; }
 .dashboard-loading { display: flex; justify-content: center; align-items: center; height: 100vh; font-size: 1.5rem; color: #a1887f; }
 
-/* Tambahkan di akhir file App.css */
-/* Hapus semua style dashboard lama jika ada */
-
 :root {
-  /* Definisikan palet warna coklat baru */
-  --color-brand-brown: #8d6e63; /* Coklat utama */
+  --color-brand-brown: #8d6e63; 
   --color-brand-brown-dark: #5d4037;
-  --color-brand-brown-light: #efebe9; /* Coklat sangat muda untuk latar */
+  --color-brand-brown-light: #efebe9; 
   --color-brand-brown-text: #4e342e;
 }
 
@@ -1373,10 +1342,9 @@ main {
   display: flex;
   min-height: 100vh;
   font-family: var(--font-serif);
-  background-color: var(--color-brand-brown-light); /* Latar belakang coklat muda */
+  background-color: var(--color-brand-brown-light); 
 }
 
-/* --- Sidebar --- */
 .dashboard-sidebar {
   width: 260px;
   background-color: var(--color-white);
@@ -1460,7 +1428,6 @@ main {
   border-color: var(--color-brand-brown-dark);
 }
 
-/* --- Main Content --- */
 .dashboard-main {
   flex: 1;
   padding: 2.5rem 3.5rem;
@@ -1482,7 +1449,6 @@ main {
   margin-top: 0.25rem;
 }
 
-/* Statistik */
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -1522,7 +1488,6 @@ main {
   color: var(--color-brand-brown-dark);
 }
 
-/* Tabel */
 .table-section {
   margin-top: 3rem;
 }
@@ -1555,7 +1520,6 @@ main {
   background-color: #f5f5f5;
 }
 
-/* Styles lainnya tetap sama */
 .status-badge { padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: bold; text-transform: capitalize; }
 .status-pending { background-color: #ffecb3; color: #6d4c41; }
 .status-approved { background-color: #c8e6c9; color: #2e7d32; }
@@ -1569,3 +1533,277 @@ main {
 .points { background-color: var(--color-brand-brown); color: white; display: flex; align-items: center; gap: 0.25rem; }
 .points-awarded { font-size: 0.875rem; color: #a1887f; font-style: italic; }
 .dashboard-loading { display: flex; justify-content: center; align-items: center; height: 100vh; font-size: 1.5rem; color: #a1887f; }
+
+.admin-layout {
+  display: flex;
+  min-height: 100vh;
+  background-color: #F8F7F4; 
+  font-family: var(--font-serif);
+}
+
+.admin-sidebar {
+  width: 260px;
+  background-color: #FFFFFF;
+  border-right: 1px solid #EAE8E2;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+
+.sidebar-logo-container {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.sidebar-logo-img {
+  width: 32px;
+  height: 32px;
+}
+
+.admin-sidebar .logo {
+  color: var(--color-primary);
+  margin: 0;
+}
+
+.admin-panel-label {
+  font-size: 0.7rem;
+  color: #A8A29E;
+  letter-spacing: 1.5px;
+  font-weight: 600;
+  margin-bottom: 2rem;
+}
+
+/* Navigasi Sidebar */
+.admin-sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.admin-sidebar-nav .nav-button {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  text-decoration: none;
+  color: #78716C;
+  font-weight: 600;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+  text-align: left;
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  transition: all 0.2s ease-in-out;
+}
+
+.admin-sidebar-nav .nav-button:hover {
+  background-color: #F8F7F4;
+  color: var(--color-text);
+}
+
+.admin-sidebar-nav .nav-button.active {
+  background-color: var(--color-primary);
+  color: var(--color-white);
+}
+
+.admin-logout-button {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid #EAE8E2;
+  background-color: transparent;
+  border-radius: 0.5rem;
+  font-family: var(--font-serif);
+  font-weight: 600;
+  color: #78716C;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.admin-logout-button:hover {
+  background-color: #F8F7F4;
+  border-color: #D6D3D1;
+}
+
+.admin-main-content {
+  flex-grow: 1;
+  padding: 2.5rem 3rem;
+  overflow-y: auto;
+}
+
+.admin-header h1 {
+  font-size: 2.25rem;
+  font-weight: 800;
+  color: var(--color-primary-dark);
+  margin: 0;
+}
+
+.admin-header p {
+  color: var(--color-text-light);
+  font-size: 1rem;
+  margin-top: 0.25rem;
+}
+
+.stats-grid-revamped {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2.5rem;
+}
+
+.stat-card-revamped {
+  background-color: #FFFFFF;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  border: 1px solid #EAE8E2;
+  transition: all 0.2s ease-in-out;
+}
+
+.stat-card-revamped:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px -5px rgba(120, 53, 15, 0.1);
+}
+
+.stat-emoji {
+  font-size: 2.5rem; 
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.stat-info .stat-title {
+  font-size: 0.9rem;
+  color: var(--color-text-light);
+  font-weight: 600;
+  margin: 0;
+}
+
+.stat-info .stat-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-primary-dark);
+  margin: 0.25rem 0 0 0;
+  line-height: 1.2;
+}
+
+.stat-info .stat-unit {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text-light);
+  margin-left: 0.25rem;
+}
+
+.table-section {
+  margin-top: 2.5rem;
+}
+
+.table-wrapper {
+  background-color: #FFFFFF;
+  border-radius: 1rem;
+  overflow: hidden;
+  border: 1px solid #EAE8E2;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.data-table th, .data-table td {
+  padding: 1rem 1.5rem;
+  text-align: left;
+  border-bottom: 1px solid #EAE8E2;
+}
+
+.data-table th {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-text-light);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.data-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.data-table tbody tr:hover {
+  background-color: #F8F7F4;
+}
+
+.empty-table-cell {
+  text-align: center;
+  padding: 3rem;
+  color: var(--color-text-light);
+}
+
+/* Badge Status */
+.status-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+.status-pending_approval { background-color: #FEF3C7; color: #92400E; }
+.status-approved { background-color: #DBEAFE; color: #1E40AF; }
+.status-completed { background-color: #D1FAE5; color: #065F46; }
+.status-rejected { background-color: #FEE2E2; color: #991B1B; }
+
+/* Tombol Aksi */
+.action-cell {
+  display: flex;
+  gap: 0.5rem;
+}
+.action-button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.action-button.approve { background-color: #D1FAE5; color: #065F46; }
+.action-button.approve:hover { background-color: #A7F3D0; }
+.action-button.reject { background-color: #FEE2E2; color: #991B1B; }
+.action-button.reject:hover { background-color: #FECACA; }
+.action-button.points { background-color: var(--color-primary-light); color: var(--color-primary-dark); }
+.action-button.points:hover { background-color: #FCD34D; }
+
+.points-awarded {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-text-light);
+}
+
+/* Notifikasi Halaman */
+.page-notification {
+  position: fixed;
+  top: 1.5rem;
+  right: 1.5rem;
+  padding: 1rem 1.5rem;
+  border-radius: 0.5rem;
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  z-index: 100;
+  animation: slideInNotification 0.3s ease-out;
+}
+@keyframes slideInNotification {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+.page-notification.success { background-color: #10B981; color: white; }
+.page-notification.error { background-color: #EF4444; color: white; }
+.notification-close-btn { background: none; border: none; color: white; font-size: 1.25rem; cursor: pointer; }
