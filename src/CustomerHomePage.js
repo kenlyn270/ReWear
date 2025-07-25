@@ -7,7 +7,7 @@ import { db } from "./firebase";
 
 // --- Komponen Ikon SVG ---
 const IconShoppingCart = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
   </svg>
 );
@@ -17,22 +17,12 @@ const IconSend = () => (
   </svg>
 );
 const IconX = () => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line>
   </svg>
 );
-// const IconPackageCheck = () => (
-//   <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="success-icon">
-//     <path d="m16 16 2 2 4-4"></path><path d="M21 10V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l2-1.14"></path><path d="M16.5 9.4 7.55 4.24"></path><polyline points="3.29 7 12 12 20.71 7"></polyline><line x1="12" y1="22" x2="12" y2="12"></line>
-//   </svg>
-// );
-// const IconInfo = () => (
-//   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="info-icon">
-//     <circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line>
-//   </svg>
-// );
 const IconTrash = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
 );
 
 // --- Komponen Utama Aplikasi ---
@@ -41,7 +31,6 @@ export default function App() {
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   
-  // --- STATE BARU UNTUK KERANJANG & NOTIFIKASI ---
   const [cartItems, setCartItems] = useState([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [notification, setNotification] = useState(null);
@@ -60,7 +49,6 @@ export default function App() {
       } catch (error) {
         console.error("Error fetching products:", error);
         setError("Oops, gagal memuat produk. Silakan coba muat ulang halaman nanti.");
-        // Di sini kamu bisa menambahkan state untuk menampilkan pesan error di UI jika perlu
       }
       setIsLoading(false);
     };
@@ -68,7 +56,6 @@ export default function App() {
     fetchProducts();
   }, []);
 
-  // --- FUNGSI BARU UNTUK MENGELOLA KERANJANG & NOTIFIKASI ---
   useEffect(() => {
     if (notification) {
       const timer = setTimeout(() => {
@@ -78,39 +65,33 @@ export default function App() {
     }
   }, [notification]);
 
-  // --- REVISI 1: Logika "Tambah ke Keranjang" ---
   const handleAddToCart = (productToAdd) => {
     setCartItems(prevItems => {
       const existingItem = prevItems.find(item => item.id === productToAdd.id);
       if (existingItem) {
-        // Jika barang sudah ada, tambah quantity-nya
         return prevItems.map(item =>
           item.id === productToAdd.id ? { ...item, quantity: item.quantity + 1 } : item
         );
       }
-      // Jika barang baru, tambahkan ke keranjang dengan quantity 1 dan status terpilih (checked)
       return [...prevItems, { ...productToAdd, quantity: 1, selected: true }];
     });
     setNotification(`${productToAdd.name} telah ditambahkan ke keranjang!`);
   };
 
-  // --- REVISI 3: Logika "Hapus dari Keranjang" ---
   const handleRemoveFromCart = (productIdToRemove) => {
     setCartItems(prevItems => prevItems.filter(item => item.id !== productIdToRemove));
   };
 
-  // --- FUNGSI BARU: Logika "Ubah Jumlah Barang" ---
   const handleUpdateQuantity = (productId, amount) => {
     setCartItems(prevItems =>
         prevItems.map(item =>
             item.id === productId
-                ? { ...item, quantity: Math.max(1, item.quantity + amount) } // Pastikan jumlah tidak kurang dari 1
+                ? { ...item, quantity: Math.max(1, item.quantity + amount) }
                 : item
         )
     );
   };
 
-  // --- REVISI 2: Logika "Checklist" ---
   const handleToggleSelectItem = (productIdToToggle) => {
       setCartItems(prevItems =>
         prevItems.map(item =>
@@ -123,9 +104,8 @@ export default function App() {
   const handleCloseModal = () => setIsModalOpen(false);
   const toggleCart = () => setIsCartOpen(!isCartOpen);
 
-  // Hitung total item untuk badge di ikon keranjang
   const totalCartQuantity = cartItems.reduce((total, item) => total + item.quantity, 0);
-  console.log("INI DATA PRODUK YG DITERIMA KODE:", products);
+
   return (
     <div className="app-container">
       <Header cartItemCount={totalCartQuantity} onCartClick={toggleCart} />
@@ -135,10 +115,8 @@ export default function App() {
           <h2>Produk Hasil Daur Ulang</h2>
           <p>Beli produk keren sambil membantu bumi.</p>
           
-          {/* ===== PASTIKAN BAGIAN INI ADA ===== */}
           {error ? (
             <div className="error-ui-message">
-              {/* Di sini variabel 'error' dipakai untuk ditampilkan */}
               <p>{error}</p> 
             </div>
           ) : (
@@ -148,12 +126,12 @@ export default function App() {
               onAddToCart={handleAddToCart} 
             />
           )}
-          {/* ======================================= */}
-
         </section>
       </main>
       <Footer />
-      {isModalOpen && <SubmissionModal onClose={handleCloseModal} />}
+      
+      {isModalOpen && <SubmissionModal onClose={handleCloseModal} setNotification={setNotification} />}
+
       {isCartOpen && <ShoppingCart items={cartItems} onClose={toggleCart} onRemove={handleRemoveFromCart} onToggleSelect={handleToggleSelectItem} onUpdateQuantity={handleUpdateQuantity} />}
       {notification && <Notification message={notification} />}
     </div>
@@ -176,7 +154,7 @@ function Header({ cartItemCount, onCartClick }) {
           </button>
         </div>
         <button className="mobile-menu-button">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
         </button>
       </nav>
     </header>
@@ -245,36 +223,87 @@ function ProductSkeleton() {
   );
 }
 
-function SubmissionModal({ onClose }) {
+function SubmissionModal({ onClose, setNotification }) {
+  const [formData, setFormData] = useState({
+    fullName: '',
+    address: '',
+    itemType: 'Kemeja',
+    itemDescription: ''
+  });
+  const [isFormValid, setIsFormValid] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitSuccess, setSubmitSuccess] = useState(false);
-  const [aiResult, setAiResult] = useState(null); // state baru simpan hasil AI
+  const [aiResult, setAiResult] = useState(null);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prevData => ({
+      ...prevData,
+      [name]: value
+    }));
+  };
+
+  useEffect(() => {
+    // DEBUG: Console log untuk melihat data
+    console.log("VALIDASI DIJALANKAN, DATA SAAT INI:", { 
+      formData, 
+      aiResult,
+      allFieldsFilled: Object.values(formData).every(value => value.trim() !== ''),
+      aiStatus: aiResult?.status
+    });
+
+    const allFieldsFilled = Object.values(formData).every(value => value.trim() !== '');
+    
+    // PERBAIKAN: Periksa berbagai kemungkinan struktur aiResult
+    const isAiCheckSuccessful = aiResult && (
+      aiResult.status === 'diterima' || 
+      aiResult.hasil === 'diterima' || 
+      aiResult.success === true ||
+      aiResult.valid === true ||
+      aiResult.accepted === true ||
+      aiResult.isValid === true
+    );
+
+    console.log("AI Check Result:", {
+      aiResult,
+      isAiCheckSuccessful,
+      aiResultKeys: aiResult ? Object.keys(aiResult) : 'null'
+    });
+
+    setIsFormValid(allFieldsFilled && isAiCheckSuccessful);
+
+  }, [formData, aiResult]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    console.log("SUBMIT TRIGGERED:", { isFormValid, isSubmitting, aiResult });
+
+    if (!isFormValid) {
+      setNotification("❌ Pastikan semua kolom terisi dan foto pakaian valid.");
+      return;
+    }
+    
     setIsSubmitting(true);
 
-    const formData = new FormData(event.target);
-
-    // Gabung data form + hasil AI
     const dataToSave = {
-      namaLengkap: formData.get("fullName"),
-      alamatPenjemputan: formData.get("address"),
-      jenisBarang: formData.get("itemType"),
-      deskripsiKondisi: formData.get("itemDescription"),
+      namaLengkap: formData.fullName,
+      alamatPenjemputan: formData.address,
+      jenisBarang: formData.itemType,
+      deskripsiKondisi: formData.itemDescription,
       createdAt: serverTimestamp(),
       status: "pending",
-      aiStatus: aiResult?.status || null,
-      aiKategori: aiResult?.kategori || null,
-      aiSaranUpcycle: aiResult?.saran_upcycle || []
+      aiStatus: aiResult?.status || aiResult?.hasil || null,
+      aiKategori: aiResult?.kategori || aiResult?.category || null,
+      aiSaranUpcycle: aiResult?.saran_upcycle || aiResult?.suggestions || []
     };
 
     try {
       await addDoc(collection(db, "recycles"), dataToSave);
-      setSubmitSuccess(true);
+      setNotification("✅ Terima kasih! Formulir pengirimanmu telah kami terima.");
+      onClose();
     } catch (error) {
       console.error("Error simpan data:", error);
-      alert("Gagal menyimpan data, coba lagi.");
+      setNotification("❌ Gagal menyimpan data, coba lagi.");
     } finally {
       setIsSubmitting(false);
     }
@@ -284,54 +313,61 @@ function SubmissionModal({ onClose }) {
     <div className="modal-overlay">
       <div className="modal-content">
         <button onClick={onClose} className="modal-close-button">✕</button>
+        <>
+          <h2>Kirim Barang Bekasmu</h2>
+          <p className="modal-subtitle">Isi detail di bawah ini lalu cek kondisi barangmu dengan AI.</p>
+          
+          <form onSubmit={handleSubmit} className="modal-form">
+            <div className="form-group">
+              <label htmlFor="fullName">Nama Lengkap</label>
+              <input 
+                type="text" id="fullName" name="fullName" required 
+                value={formData.fullName} onChange={handleInputChange} 
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="address">Alamat Penjemputan</label>
+              <textarea 
+                id="address" name="address" rows="3" required
+                value={formData.address} onChange={handleInputChange}
+              ></textarea>
+            </div>
+            <div className="form-group">
+              <label htmlFor="itemType">Jenis Barang</label>
+              <select 
+                id="itemType" name="itemType" required
+                value={formData.itemType} onChange={handleInputChange}
+              >
+                <option>Kemeja</option><option>Celana</option><option>Gaun</option><option>Jaket</option><option>Lainnya</option>
+              </select>
+            </div>
+            <div className="form-group">
+              <label htmlFor="itemDescription">Deskripsi/Kondisi Barang</label>
+              <textarea 
+                id="itemDescription" name="itemDescription" rows="3" required
+                value={formData.itemDescription} onChange={handleInputChange}
+              ></textarea>
+            </div>
 
-        {submitSuccess ? (
-          <div className="modal-success-view">
-            <h2>Terima Kasih!</h2>
-            <p>Formulir pengirimanmu telah kami terima.</p>
-            <button onClick={onClose} className="button-primary">Tutup</button>
-          </div>
-        ) : (
-          <>
-            <h2>Kirim Barang Bekasmu</h2>
-            <p className="modal-subtitle">Isi detail + cek kondisi barangmu dengan AI.</p>
-
-            {/* 🔍 Tambahin AI Checker di atas form */}
             <AIChecker onCheckComplete={setAiResult} />
 
-            <form onSubmit={handleSubmit} className="modal-form">
-              <div className="form-group">
-                <label htmlFor="fullName">Nama Lengkap</label>
-                <input type="text" id="fullName" name="fullName" required />
-              </div>
-              <div className="form-group">
-                <label htmlFor="address">Alamat Penjemputan</label>
-                <textarea id="address" name="address" rows="3" required></textarea>
-              </div>
-              <div className="form-group">
-                <label htmlFor="itemType">Jenis Barang</label>
-                <select id="itemType" name="itemType" required>
-                  <option>Kemeja</option><option>Celana</option><option>Gaun</option><option>Jaket</option><option>Lainnya</option>
-                </select>
-              </div>
-              <div className="form-group">
-                <label htmlFor="itemDescription">Deskripsi/Kondisi Barang</label>
-                <textarea id="itemDescription" name="itemDescription" rows="3" required></textarea>
-              </div>
-
-              <button type="submit" disabled={isSubmitting} className="button-primary">
-                {isSubmitting ? 'Mengirim...' : 'Kirim Detail Barang'}
-              </button>
-            </form>
-          </>
-        )}
+            <button 
+              type="submit" 
+              disabled={!isFormValid || isSubmitting} 
+              className="button-primary"
+              style={{
+                opacity: (!isFormValid || isSubmitting) ? 0.5 : 1,
+                cursor: (!isFormValid || isSubmitting) ? 'not-allowed' : 'pointer'
+              }}
+            >
+              {isSubmitting ? 'Mengirim...' : 'Kirim Detail Barang'}
+            </button>
+          </form>
+        </>
       </div>
     </div>
   );
 }
-
-export {SubmissionModal};
-
 
 function Footer() {
   return (
@@ -375,9 +411,7 @@ function Notification({ message }) {
   );
 }
 
-// --- REVISI KOMPONEN KERANJANG ---
 function ShoppingCart({ items, onClose, onRemove, onToggleSelect, onUpdateQuantity }) {
-    // --- REVISI 2: Hitung total harga hanya untuk item yang dipilih ---
     const totalPrice = items
         .filter(item => item.selected)
         .reduce((total, item) => total + (item.price * item.quantity), 0);
@@ -405,7 +439,6 @@ function ShoppingCart({ items, onClose, onRemove, onToggleSelect, onUpdateQuanti
                                 <div className="cart-item-info">
                                     <h4>{item.name}</h4>
                                     <p>Rp {item.price.toLocaleString('id-ID')}</p>
-                                    {/* --- REVISI: Penyesuai Jumlah Barang --- */}
                                     <div className="quantity-adjuster">
                                         <button onClick={() => onUpdateQuantity(item.id, -1)} className="quantity-btn">-</button>
                                         <span className="quantity-display">{item.quantity}</span>
@@ -430,3 +463,5 @@ function ShoppingCart({ items, onClose, onRemove, onToggleSelect, onUpdateQuanti
         </div>
     );
 }
+
+export {SubmissionModal};
