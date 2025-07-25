@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import './App.css'; // Penting: Import file CSS
 import AIChecker from './AIChecker'; // <-- Tambahkan import untuk komponen AI
-import { collection, addDoc, serverTimestamp, getDocs } from "firebase/firestore";
+import { collection, addDoc, serverTimestamp, getDocs, query, where, doc, getDoc } from "firebase/firestore";
 import { db } from "./firebase";
 import { useAuth } from './AuthContext';
+import { getAuth, signOut } from "firebase/auth";
+import { useNavigate } from 'react-router-dom';
 
 // --- Komponen Ikon SVG ---
 const IconShoppingCart = () => (
@@ -24,36 +26,43 @@ const IconX = () => (
 const IconTrash = () => (
     <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" viewBox="0 0 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
 );
-
+const IconLogout = () => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>;
 
 // --- Komponen Utama Aplikasi ---
 export default function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  
   const [cartItems, setCartItems] = useState([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [notification, setNotification] = useState(null);
   const [error, setError] = useState(null);
+
+  const [userStats, setUserStats] = useState({
+    rewardPoints: 0,
+    recycledCount: 0,
+    waterSaved: 0,
+    co2Saved: 0,
+    isLoading: true
+  });
+
+  const { currentUser } = useAuth();
+  const auth = getAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProducts = async () => {
       setIsLoading(true);
       try {
         const querySnapshot = await getDocs(collection(db, "products"));
-        const productsList = querySnapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data()
-        }));
+        const productsList = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         setProducts(productsList);
       } catch (error) {
         console.error("Error fetching products:", error);
-        setError("Oops, gagal memuat produk. Silakan coba muat ulang halaman nanti.");
+        setError("Oops, gagal memuat produk.");
       }
       setIsLoading(false);
     };
-
     fetchProducts();
   }, []);
 
@@ -65,6 +74,89 @@ export default function App() {
       return () => clearTimeout(timer);
     }
   }, [notification]);
+
+  useEffect(() => {
+    const fetchUserStats = async () => {
+      if (!currentUser) {
+        console.log("Menunggu data user (currentUser masih kosong)...");
+        setUserStats(prev => ({ ...prev, isLoading: false }));
+        return;
+      }
+
+      console.log("User ditemukan, mencoba mengambil statistik untuk:", currentUser.uid);
+      setUserStats(prev => ({ ...prev, isLoading: true }));
+      try {
+        const userDocRef = doc(db, "users", currentUser.uid);
+        const userDocSnap = await getDoc(userDocRef);
+        const points = userDocSnap.exists() ? userDocSnap.data().rewardPoints : 0;
+        console.log("Poin user:", points);
+
+        const recyclesQuery = query(collection(db, "recycles"), where("userId", "==", currentUser.uid));
+        const recyclesSnapshot = await getDocs(recyclesQuery);
+        const recycledCount = recyclesSnapshot.size;
+        console.log("Jumlah pakaian dikembalikan:", recycledCount);
+
+        const waterSaved = recycledCount * 2700;
+        const co2Saved = recycledCount * 2.1;
+
+        const newStats = {
+          rewardPoints: points,
+          recycledCount: recycledCount,
+          waterSaved: waterSaved,
+          co2Saved: co2Saved,
+          isLoading: false
+        };
+        setUserStats(newStats);
+        console.log("✅ Statistik user berhasil dihitung:", newStats);
+      } catch (error) {
+        console.error("❌ Gagal mengambil statistik user:", error);
+        setUserStats(prev => ({ ...prev, isLoading: false }));
+      }
+    };
+
+    fetchUserStats();
+  }, [currentUser]);
+
+  const handleLogout = () => {
+    signOut(auth).then(() => {
+      // Setelah berhasil logout, arahkan ke landing page
+      navigate('/');
+    }).catch((error) => {
+      console.error("Logout Error:", error);
+      setNotification({ message: 'Gagal untuk logout.', type: 'error' });
+    });
+  };
+
+function UserStatsSection({ stats }) {
+  if (stats.isLoading) {
+    return <div className="user-stats-loading">Memuat kontribusimu...</div>;
+  }
+
+  return (
+    <section className="user-stats-section">
+      <h2>Kontribusi Anda</h2>
+      <p className="impact-explanation">
+        Tahukah Anda? Pembuatan 1 baju katun membutuhkan hingga <strong>2.700 liter air</strong> dan menghasilkan <strong>2,1 kg CO2</strong>.
+        Dengan mendaur ulang, Anda telah membantu menghemat sumber daya berharga ini!
+      </p>
+      <div className="stats-grid-customer">
+        <StatCardCustomer title="Reward Points Anda" value={stats.rewardPoints.toLocaleString('id-ID')} />
+        <StatCardCustomer title="Pakaian Dikembalikan" value={`${stats.recycledCount} Pcs`} />
+        <StatCardCustomer title="Estimasi Air Dihemat" value={`${stats.waterSaved.toLocaleString('id-ID')} L`} />
+        <StatCardCustomer title="Estimasi CO2 Dikurangi" value={`${stats.co2Saved.toLocaleString('id-ID', {maximumFractionDigits: 1})} kg`} />
+      </div>
+    </section>
+  );
+}
+
+function StatCardCustomer({ title, value }) {
+  return (
+    <div className="stat-card-customer">
+      <p>{title}</p>
+      <h3>{value}</h3>
+    </div>
+  );
+}
 
   const handleAddToCart = (productToAdd) => {
     setCartItems(prevItems => {
@@ -109,37 +201,81 @@ export default function App() {
 
   return (
     <div className="app-container">
-      <Header cartItemCount={totalCartQuantity} onCartClick={toggleCart} />
+      <Header cartItemCount={totalCartQuantity} onCartClick={toggleCart} onLogout={handleLogout} />
       <main>
         <HeroSection onSendClick={handleOpenModal} />
+        
+        {/* // <-- INI DIA! Bagian ini yang ditambahkan untuk menampilkan statistik --> */}
+        <UserStatsSection stats={userStats} />
+        
         <section className="catalog-section">
           <h2>Produk Hasil Daur Ulang</h2>
           <p>Beli produk keren sambil membantu bumi.</p>
           
           {error ? (
-            <div className="error-ui-message">
-              <p>{error}</p> 
-            </div>
+            <div className="error-ui-message"><p>{error}</p></div>
           ) : (
-            <ProductCatalog 
-              products={products} 
-              isLoading={isLoading} 
-              onAddToCart={handleAddToCart} 
-            />
+            <ProductCatalog products={products} isLoading={isLoading} onAddToCart={handleAddToCart} />
           )}
         </section>
       </main>
       <Footer />
       
       {isModalOpen && <SubmissionModal onClose={handleCloseModal} setNotification={setNotification} />}
-      {isCartOpen && <ShoppingCart items={cartItems} onClose={() => setIsCartOpen(false)} setNotification={setNotification} />}      {notification && <Notification message={notification} />}
+      
+      {/* // <-- PERBAIKAN: Oper semua fungsi yang dibutuhkan ke ShoppingCart --> */}
+      {isCartOpen && (
+        <ShoppingCart 
+          items={cartItems} 
+          onClose={() => setIsCartOpen(false)} 
+          setNotification={setNotification}
+          onRemove={handleRemoveFromCart}
+          onUpdateQuantity={handleUpdateQuantity}
+          onToggleSelect={handleToggleSelectItem}
+        />
+      )}
+
+      {notification && <Notification message={notification} />}
+    </div>
+  );
+}
+
+function UserStatsSection({ stats }) {
+  if (stats.isLoading) {
+    return <div className="user-stats-loading">Memuat kontribusimu...</div>;
+  }
+
+  return (
+    <section className="user-stats-section">
+      <h2>Kontribusi Anda</h2>
+      <p className="impact-explanation">
+        Tahukah Anda? Pembuatan 1 baju katun membutuhkan hingga <strong>2.700 liter air</strong> dan menghasilkan <strong>2,1 kg CO2</strong>.
+        Dengan mendaur ulang, Anda telah membantu menghemat sumber daya berharga ini!
+      </p>
+      <div className="stats-grid-customer">
+        <StatCardCustomer title="Reward Points Anda" value={stats.rewardPoints.toLocaleString('id-ID')} />
+        <StatCardCustomer title="Pakaian Dikembalikan" value={`${stats.recycledCount} Pcs`} />
+        <StatCardCustomer title="Estimasi Air Dihemat" value={`${stats.waterSaved.toLocaleString('id-ID')} L`} />
+        <StatCardCustomer title="Estimasi CO2 Dikurangi" value={`${stats.co2Saved.toLocaleString('id-ID', {maximumFractionDigits: 1})} kg`} />
+      </div>
+    </section>
+  );
+}
+
+function StatCardCustomer({ title, value }) {
+  return (
+    <div className="stat-card-customer">
+      <p>{title}</p>
+      <h3>{value}</h3>
     </div>
   );
 }
 
 // --- Komponen-komponen Pendukung ---
-function Header({ cartItemCount, onCartClick }) {
+function Header({ cartItemCount, onCartClick, onLogout }) {
   const navItems = ['Woman', 'Men', 'Kids', 'Baby'];
+  const { currentUser } = useAuth();
+
   return (
     <header className="app-header">
       <nav className="header-nav">
@@ -147,14 +283,19 @@ function Header({ cartItemCount, onCartClick }) {
         <div className="nav-links">
           {navItems.map(item => <a key={item} href="/#">{item}</a>)}
           <a href="/#" className="active">Recycle</a>
-          <button onClick={onCartClick} className="cart-button">
-            <IconShoppingCart />
-            {cartItemCount > 0 && <span className="cart-badge">{cartItemCount}</span>}
-          </button>
+          <div className="header-icons">
+            <button onClick={onCartClick} className="cart-button">
+              <IconShoppingCart />
+              {cartItemCount > 0 && <span className="cart-badge">{cartItemCount}</span>}
+            </button>
+            {currentUser && (
+              <button onClick={onLogout} className="logout-button" title="Logout">
+                <IconLogout />
+              </button>
+            )}
+          </div>
         </div>
-        <button className="mobile-menu-button">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
-        </button>
+        <button className="mobile-menu-button">{/* ... */}</button>
       </nav>
     </header>
   );
@@ -229,7 +370,6 @@ function SubmissionModal({ onClose, setNotification }) {
     address: '',
     noTelp: '',
     itemType: 'Kemeja',
-    itemDescription: '',
     deliveryOption: 'pickup', // <-- TAMBAHKAN INI. 'pickup' atau 'dropoff'
     itemDescription: ''
 });
