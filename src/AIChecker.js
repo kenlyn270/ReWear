@@ -45,7 +45,7 @@ export default function AIChecker({ onCheckComplete }) { // TAMBAHKAN PROP INI
       onCheckComplete(null);
     }
 
-    const apiKey = "AIzaSyAO8MAq9ET_RjiSpO4kc0lh0evPjd4mgKU"; 
+    const apiKey = process.env.FIREBASE_API_KEY; 
     const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
     try {
